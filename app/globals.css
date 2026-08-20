@@ -20,7 +20,7 @@
   --color-button-border: #1c1957;
 
   --color-text-primary: #13031D;
-  --color-text-secondary: #e5e7eb;
+  --color-text-secondary: #717171;
 
 }
 
@@ -34,5 +34,6 @@
 body {
   background: var(--color-background);
   color: var(--color-text-primary);
+  /* color: #717171; */
   /* font-family: Arial, Helvetica, sans-serif; */
 }
