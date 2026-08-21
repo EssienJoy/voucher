@@ -1,52 +1,143 @@
 import { Container, Logo } from "@/app/_components";
+import Link from "next/link";
+// import { Chrome } from "lucide-react";
 
 const SignUp = () => {
 	return (
-		<section className='h-dvh flex items-center justify-center'>
+		<section className='min-h-dvh flex items-center justify-center px-4 py-10'>
 			<Container>
-				<header className='flex items-center justify-center'>
-					<Logo />
-				</header>
+				<div className='mx-auto w-full max-w-md'>
+					{/* Logo */}
+					<header className='flex justify-center'>
+						<Logo />
+					</header>
 
-				<h1 className='text-2xl font-bold my-5'>Create Your Account</h1>
+					{/* Heading */}
+					<div className='mt-8 text-center'>
+						<h1 className='text-3xl font-bold text-text-primary'>
+							Create your account
+						</h1>
 
-				<div className='mb-5'>
-					<form action=''>
+						<p className='mt-2 text-sm text-text-secondary'>
+							Start managing your business vouchers today.
+						</p>
+					</div>
+
+					{/* Form */}
+					<form className='mt-8 space-y-5'>
+						{/* Business name */}
 						<div className='grid gap-2'>
 							<label
-								className='text-xl font-semibold
-							'>
-								Business Name:
+								htmlFor='businessName'
+								className='text-sm font-semibold text-text-primary'>
+								Business name
 							</label>
-							<input className='bg-white px-2 py-2 rounded-xl' type='text' />
+
+							<input
+								id='businessName'
+								name='businessName'
+								type='text'
+								placeholder='e.g. Joy Kitchen'
+								className='
+									w-full rounded-xl border border-gray-200
+									bg-white px-4 py-3
+									outline-none transition
+									focus:border-primary
+									focus:ring-2 focus:ring-primary/10
+								'
+							/>
 						</div>
+
+						{/* Email */}
 						<div className='grid gap-2'>
 							<label
-								className='text-xl font-semibold
-							'>
-								Email:
+								htmlFor='email'
+								className='text-sm font-semibold text-text-primary'>
+								Email
 							</label>
-							<input className='bg-white px-2 py-2 rounded-xl' type='text' />
+
+							<input
+								id='email'
+								name='email'
+								type='email'
+								placeholder='you@example.com'
+								className='
+									w-full rounded-xl border border-gray-200
+									bg-white px-4 py-3
+									outline-none transition
+									focus:border-primary
+									focus:ring-2 focus:ring-primary/10
+								'
+							/>
 						</div>
+
+						{/* Password */}
 						<div className='grid gap-2'>
 							<label
-								className='text-xl font-semibold
-							'>
-								Password:
+								htmlFor='password'
+								className='text-sm font-semibold text-text-primary'>
+								Password
 							</label>
-							<input className='bg-white px-2 py-2 rounded-xl' type='text' />
+
+							<input
+								id='password'
+								name='password'
+								type='password'
+								placeholder='Create a password'
+								className='
+									w-full rounded-xl border border-gray-200
+									bg-white px-4 py-3
+									outline-none transition
+									focus:border-primary
+									focus:ring-2 focus:ring-primary/10
+								'
+							/>
 						</div>
+
+						<button
+							type='submit'
+							className='
+								w-full rounded-xl bg-primary
+								px-5 py-3.5
+								font-semibold text-white
+								transition hover:opacity-90
+							'>
+							Create Account
+						</button>
 					</form>
 
-					<div className='mt-2'>
-						<button>Create Account</button>
-					</div>
-				</div>
+					{/* Divider */}
+					<div className='my-6 flex items-center gap-4'>
+						<div className='h-px flex-1 bg-gray-200' />
 
-				<div>
-					<p className='text-center my-2'>or</p>
-					<button>Continue With Google</button>
-					<p>Already have an account SignUp</p>
+						<span className='text-sm text-text-secondary'>or</span>
+
+						<div className='h-px flex-1 bg-gray-200' />
+					</div>
+
+					{/* Google */}
+					<button
+						type='button'
+						className='
+							flex w-full items-center justify-center
+							gap-3 rounded-xl border border-gray-200
+							bg-white px-5 py-3.5
+							font-semibold text-text-primary
+							transition hover:bg-gray-50
+						'>
+						{/* <Chrome size={19} /> */}
+						Continue with Google
+					</button>
+
+					{/* Login */}
+					<p className='mt-7 text-center text-sm text-text-secondary'>
+						Already have an account?{" "}
+						<Link
+							href='/login'
+							className='font-semibold text-primary hover:underline'>
+							Log in
+						</Link>
+					</p>
 				</div>
 			</Container>
 		</section>
