@@ -1,4 +1,4 @@
-import { Container, Logo } from "@/app/_components";
+import { Container, Logo, SignUpForm } from "@/app/_components";
 import Link from "next/link";
 // import { Chrome } from "lucide-react";
 
@@ -23,88 +23,7 @@ const SignUp = () => {
 						</p>
 					</div>
 
-					{/* Form */}
-					<form className='mt-8 space-y-5'>
-						{/* Business name */}
-						<div className='grid gap-2'>
-							<label
-								htmlFor='businessName'
-								className='text-sm font-semibold text-text-primary'>
-								Business name
-							</label>
-
-							<input
-								id='businessName'
-								name='businessName'
-								type='text'
-								placeholder='e.g. Joy Kitchen'
-								className='
-									w-full rounded-xl border border-gray-200
-									bg-white px-4 py-3
-									outline-none transition
-									focus:border-primary
-									focus:ring-2 focus:ring-primary/10
-								'
-							/>
-						</div>
-
-						{/* Email */}
-						<div className='grid gap-2'>
-							<label
-								htmlFor='email'
-								className='text-sm font-semibold text-text-primary'>
-								Email
-							</label>
-
-							<input
-								id='email'
-								name='email'
-								type='email'
-								placeholder='you@example.com'
-								className='
-									w-full rounded-xl border border-gray-200
-									bg-white px-4 py-3
-									outline-none transition
-									focus:border-primary
-									focus:ring-2 focus:ring-primary/10
-								'
-							/>
-						</div>
-
-						{/* Password */}
-						<div className='grid gap-2'>
-							<label
-								htmlFor='password'
-								className='text-sm font-semibold text-text-primary'>
-								Password
-							</label>
-
-							<input
-								id='password'
-								name='password'
-								type='password'
-								placeholder='Create a password'
-								className='
-									w-full rounded-xl border border-gray-200
-									bg-white px-4 py-3
-									outline-none transition
-									focus:border-primary
-									focus:ring-2 focus:ring-primary/10
-								'
-							/>
-						</div>
-
-						<button
-							type='submit'
-							className='
-								w-full rounded-xl bg-primary
-								px-5 py-3.5
-								font-semibold text-white
-								transition hover:opacity-90
-							'>
-							Create Account
-						</button>
-					</form>
+					<SignUpForm />
 
 					{/* Divider */}
 					<div className='my-6 flex items-center gap-4'>

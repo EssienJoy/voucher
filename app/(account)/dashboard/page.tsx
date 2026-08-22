@@ -4,7 +4,8 @@ import { AccountHeader } from "../_components";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+	// console.log(data);
 	return (
 		<>
 			<AccountHeader text='Dashboard' />
@@ -22,7 +23,7 @@ const DashboardPage = () => {
 						</h1>
 
 						<p className='mt-2 text-sm text-text-secondary'>
-							Here's an overview of your vouchers.
+							Here&apos;s an overview of your vouchers.
 						</p>
 					</div>
 
