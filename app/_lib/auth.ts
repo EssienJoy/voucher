@@ -34,3 +34,9 @@ export const signUpWithEmailAndPassword = async ({
 
 	return { data, error };
 };
+
+export const signOut = async () => {
+	const supabase = createClientBrowser();
+	const { error } = await supabase.auth.signOut();
+	return { error };
+};
