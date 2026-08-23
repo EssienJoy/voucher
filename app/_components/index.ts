@@ -6,3 +6,4 @@ export { default as Hero } from "./Hero";
 export { default as Footer } from "./Footer";
 export { default as SignUpForm } from "./SignUpForm";
 export { default as LoginForm } from "./LoginForm";
+export { default as LogoutButton } from "./LogoutButton";

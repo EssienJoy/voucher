@@ -162,7 +162,7 @@ const DashboardPage = async () => {
 
 						{/* Create button */}
 						<Link
-							href='/account/vouchers/create'
+							href='/voucher/create'
 							className='mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-white transition hover:opacity-90'>
 							<Plus size={19} />
 							Create Voucher

@@ -1,7 +1,5 @@
-import { Container } from "@/app/_components";
-import React from "react";
+import { Container, LogoutButton } from "@/app/_components";
 import { AccountHeader } from "../_components";
-import { LogOut } from "lucide-react";
 
 const ProfilePage = () => {
 	return (
@@ -39,12 +37,7 @@ const ProfilePage = () => {
 						</div>
 					</div>
 
-					<button
-						type='button'
-						className='mt-8 flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-5 py-3 font-semibold text-red-500 transition hover:bg-red-50'>
-						<LogOut size={18} />
-						Log out
-					</button>
+					<LogoutButton />
 				</Container>
 			</section>
 		</>
