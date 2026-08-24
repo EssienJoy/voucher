@@ -1,10 +1,13 @@
-import { Container, LogoutButton } from "@/app/_components";
-import { AccountHeader } from "../_components";
+import { Container, LogoutButton, MobileHeader } from "@/app/_components";
+import { getBusiness } from "@/app/_lib/api/business";
 
-const ProfilePage = () => {
+const ProfilePage = async () => {
+	const { business } = await getBusiness();
+	// console.log(business);
+
 	return (
 		<>
-			<AccountHeader text='Profile' />
+			<MobileHeader text='Profile' />
 
 			<section className='py-25'>
 				<Container>
@@ -15,14 +18,14 @@ const ProfilePage = () => {
 									Business Name
 								</p>
 								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									Joy Kitchen
+									{business.business_name}
 								</p>
 							</div>
 
 							<div className='bg-white rounded-2xl  p-6'>
 								<p className='text-sm font-medium text-text-secondary'>Email</p>
 								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									joy@example.com
+									{business.email}
 								</p>
 							</div>
 

@@ -1,7 +1,7 @@
 "use client";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { signOut } from "../_lib/auth";
+import { signOut } from "../_lib/api/auth";
 
 const LogoutButton = () => {
 	const router = useRouter();
