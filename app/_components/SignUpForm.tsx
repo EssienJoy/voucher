@@ -1,6 +1,6 @@
 "use client";
-import { signUpWithEmailAndPassword } from "@/app/_lib/auth";
 import React, { useState } from "react";
+import { signUpWithEmailAndPassword } from "../_lib/api/auth";
 
 const SignUpForm = () => {
 	const [isLoading, setIsLoading] = useState(false);

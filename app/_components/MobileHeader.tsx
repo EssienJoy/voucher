@@ -1,7 +1,6 @@
 import { Container } from "@/app/_components";
-import React from "react";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+
+import ArrowBack from "./ArrowBack";
 
 const Header = ({ text }: { text: string }) => {
 	return (
@@ -16,18 +15,7 @@ const Header = ({ text }: { text: string }) => {
 			'>
 			<Container>
 				<div className='relative flex h-10 items-center justify-center'>
-					<Link
-						href='/dashboard'
-						aria-label='Go back'
-						className='
-							absolute left-0
-							flex h-10 w-10 items-center justify-center
-							rounded-full
-							transition
-							hover:bg-black/5
-						'>
-						<ArrowLeft size={21} />
-					</Link>
+					<ArrowBack />
 
 					<h1 className='text-xl font-bold text-text-primary'>{text}</h1>
 				</div>

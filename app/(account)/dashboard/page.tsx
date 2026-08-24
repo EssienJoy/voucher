@@ -1,6 +1,5 @@
-import { Container } from "@/app/_components";
+import { Container, MobileHeader } from "@/app/_components";
 import React from "react";
-import { AccountHeader } from "../_components";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -8,7 +7,7 @@ const DashboardPage = async () => {
 	// console.log(data);
 	return (
 		<>
-			<AccountHeader text='Dashboard' />
+			<MobileHeader text='Dashboard' />
 
 			<section className='py-24 pb-28'>
 				<Container>

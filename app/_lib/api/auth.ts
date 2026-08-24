@@ -1,4 +1,4 @@
-import { createClient as createClientBrowser } from "./supabase/client";
+import { createSupabaseClientBrowserFunc } from "../utils/browser";
 
 export const signInWithEmailAndPassword = async ({
 	email,
@@ -7,7 +7,7 @@ export const signInWithEmailAndPassword = async ({
 	email: string;
 	password: string;
 }) => {
-	const supabase = createClientBrowser();
+	const supabase = createSupabaseClientBrowserFunc();
 	const { error } = await supabase.auth.signInWithPassword({
 		email,
 		password,
@@ -23,20 +23,20 @@ export const signUpWithEmailAndPassword = async ({
 	email: string;
 	password: string;
 }) => {
-	const supabase = createClientBrowser();
+	const supabase = createSupabaseClientBrowserFunc();
 	const { data, error } = await supabase.auth.signUp({
 		email,
 		password,
-		// options: {
-		// 	emailRedirectTo: `${window.location.origin}/dashboard`,
-		// },
+		options: {
+			emailRedirectTo: `${window.location.origin}/dashboard`,
+		},
 	});
 
 	return { data, error };
 };
 
 export const signOut = async () => {
-	const supabase = createClientBrowser();
+	const supabase = createSupabaseClientBrowserFunc();
 	const { error } = await supabase.auth.signOut();
 	return { error };
 };

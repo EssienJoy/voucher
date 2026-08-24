@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "../_lib/auth";
 import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "../_lib/api/auth";
 
 const LoginForm = () => {
 	const [isLoading, setIsLoading] = useState(false);

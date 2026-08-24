@@ -1,12 +1,11 @@
 import React from "react";
-import { AccountHeader } from "../_components";
-import { Container } from "@/app/_components";
+import { Container, MobileHeader } from "@/app/_components";
 import Link from "next/link";
 
 const VoucherPage = () => {
 	return (
 		<>
-			<AccountHeader text='Vouchers' />
+			<MobileHeader text='Vouchers' />
 
 			<section className='py-26 md:py-20'>
 				<Container>

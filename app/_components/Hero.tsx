@@ -7,7 +7,7 @@ const Hero = () => {
 	return (
 		<section className='overflow-hidden'>
 			<Container>
-				<div className='mx-auto flex max-w-3xl flex-col items-center px-4 py-20 text-center md:py-28'>
+				<div className='mx-auto flex max-w-3xl flex-col items-center px-4 py-10 text-center md:py-28'>
 					{/* Small badge */}
 					<div className='mb-6 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-primary shadow-sm'>
 						<span className='h-2 w-2 rounded-full bg-primary' />
