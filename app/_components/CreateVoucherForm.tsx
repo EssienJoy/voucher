@@ -2,51 +2,34 @@
 
 import React, { useActionState } from "react";
 import { createVoucher } from "../_lib/api/action";
+import Input from "./Input";
 
 const CreateVoucherForm = () => {
 	const [state, submitAction, isPending] = useActionState(createVoucher, {
-		error: null,
+		error: "",
 	});
 
 	return (
 		<form action={submitAction} className='space-y-6'>
-			<div className='space-y-2'>
-				<label htmlFor='title' className='text-sm font-semibold'>
-					Voucher title
-				</label>
-
-				<input
-					id='title'
-					name='title'
-					type='text'
-					required
-					maxLength={30}
-					minLength={3}
-					placeholder='e.g. WELCOME DISCOUNT'
-					className='w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-				/>
-			</div>
-
-			<div className='space-y-2'>
-				<label htmlFor='code' className='text-sm font-semibold'>
-					Voucher code
-				</label>
-
-				<input
-					id='code'
-					name='code'
-					type='text'
-					placeholder='e.g. WELCOME20'
-					required
-					minLength={2}
-					maxLength={20}
-					className='w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 uppercase outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-				/>
-
-				<p className='text-xs text-text-secondary'>
-					Customers will use this code when redeeming the voucher.
-				</p>
-			</div>
+			<Input
+				type='text'
+				label='Voucher title'
+				name='title'
+				required
+				maxLength={30}
+				minLength={3}
+				placeHolder='e.g. WELCOME DISCOUNT'
+			/>
+			<Input
+				type='text'
+				label='Voucher code'
+				name='code'
+				required
+				maxLength={20}
+				minLength={2}
+				placeHolder='e.g. WELCOME DISCOUNT'
+				text='Customers will use this code when redeeming the voucher.'
+			/>
 
 			<div className='space-y-2'>
 				<label htmlFor='description' className='text-sm font-semibold'>
@@ -86,124 +69,49 @@ const CreateVoucherForm = () => {
 				</p>
 			</div>
 
-			<div className='space-y-2'>
-				<label htmlFor='discount' className='text-sm font-semibold'>
-					Discount
-				</label>
+			<Input
+				type='number'
+				label='Discount'
+				name='discount_value'
+				required
+				min='0'
+				placeHolder='10'
+				text='Enter the percentage or amount based on the discount type.'
+			/>
+			<Input
+				type='number'
+				label='Minimum purchase'
+				name='min_purchase'
+				min='0'
+				placeHolder='₦ 10,000'
+				optional={true}
+				text='Minimum amount a customer must spend.'
+			/>
+			<Input
+				type='number'
+				label='Maximum discount'
+				name='max_discount'
+				min='0'
+				optional={true}
+				placeHolder='₦ 5,000'
+				text='Maximum amount the customer can save.'
+			/>
+			<Input
+				type='date'
+				required
+				label='Expiry date'
+				name='expiry_date'
+				text='The date when this voucher will expire.'
+			/>
 
-				<div className='relative'>
-					<input
-						id='discount'
-						name='discount_value'
-						required
-						type='number'
-						min='0'
-						placeholder='10'
-						className='w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pr-12 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-					/>
-					<p className='font-bold text-green-600'>optional</p>
-
-					{/* <span className='absolute right-4 top-1/2 -translate-y-1/2 font-semibold text-text-secondary'>
-						%
-					</span> */}
-				</div>
-
-				<p className='text-xs text-text-secondary'>
-					Enter the percentage or amount based on the discount type.
-				</p>
-			</div>
-
-			<div className='grid gap-6 sm:grid-cols-2'>
-				<div className='space-y-2'>
-					<label htmlFor='minPurchase' className='text-sm font-semibold'>
-						Minimum purchase
-					</label>
-
-					<div className='relative'>
-						<span className='absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-text-secondary'>
-							₦
-						</span>
-
-						<input
-							id='minPurchase'
-							name='min_purchase'
-							type='number'
-							min='0'
-							placeholder='10,000'
-							className='w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-9 pr-4 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-						/>
-					</div>
-					<p className='font-bold text-green-600'>optional</p>
-					<p className='text-xs text-text-secondary'>
-						Minimum amount a customer must spend.
-					</p>
-				</div>
-
-				<div className='space-y-2'>
-					<label htmlFor='maxDiscount' className='text-sm font-semibold'>
-						Maximum discount
-					</label>
-
-					<div className='relative'>
-						<span className='absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-text-secondary'>
-							₦
-						</span>
-
-						<input
-							id='maxDiscount'
-							name='max_discount'
-							type='number'
-							min='0'
-							placeholder='5,000'
-							className='w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-9 pr-4 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-						/>
-					</div>
-					<p className='font-bold text-green-600'>optional</p>
-					<p className='text-xs text-text-secondary'>
-						Maximum amount the customer can save.
-					</p>
-				</div>
-			</div>
-
-			<div className='grid gap-6 sm:grid-cols-2'>
-				<div className='space-y-2'>
-					<label htmlFor='expiresAt' className='text-sm font-semibold'>
-						Expiry date
-					</label>
-
-					<input
-						id='expiresAt'
-						required
-						name='expiry_date'
-						type='date'
-						className='w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-					/>
-
-					<p className='text-xs text-text-secondary'>
-						The date when this voucher will expire.
-					</p>
-				</div>
-
-				<div className='space-y-2'>
-					<label htmlFor='maxUses' className='text-sm font-semibold'>
-						Maximum uses
-					</label>
-
-					<input
-						required
-						id='maxUses'
-						name='usage_limit'
-						type='number'
-						min='1'
-						placeholder='100'
-						className='w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
-					/>
-
-					<p className='text-xs text-text-secondary'>
-						Maximum number of times this voucher can be redeemed.
-					</p>
-				</div>
-			</div>
+			<Input
+				type='number'
+				label='Maximum uses'
+				name='usage_limit'
+				min='1'
+				placeHolder='100'
+				text='	Maximum number of times this voucher can be redeemed'
+			/>
 
 			<div className='flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end'>
 				<button
