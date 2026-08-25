@@ -1,11 +1,19 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createSupabaseServerClientFunc } from "../utils/server";
 import { revalidatePath } from "next/cache";
+import { createSupabaseServerClientFunc } from "../utils/server";
 
-export const createVoucher = async (previousState, formData: FormData) => {
+type ActionState = {
+	error: string;
+};
+
+export const createVoucher = async (
+	_previousState: ActionState,
+	formData: FormData,
+): Promise<ActionState> => {
 	const supabase = await createSupabaseServerClientFunc();
+
 	try {
 		const {
 			data: { user },
@@ -16,27 +24,69 @@ export const createVoucher = async (previousState, formData: FormData) => {
 			throw new Error(authError?.message ?? "Not signed in");
 		}
 
-		const getString = (key: string) => {
+		const getRequiredString = (key: string): string => {
 			const value = formData.get(key);
 
-			if (typeof value !== "string" || !value) {
+			if (typeof value !== "string" || value.trim() === "") {
 				throw new Error(`${key} is required`);
 			}
 
-			return value;
+			return value.trim();
+		};
+
+		const getOptionalString = (key: string): string | null => {
+			const value = formData.get(key);
+
+			if (typeof value !== "string" || value.trim() === "") {
+				return null;
+			}
+
+			return value.trim();
+		};
+
+		const getRequiredNumber = (key: string): number => {
+			const value = formData.get(key);
+
+			if (typeof value !== "string" || value.trim() === "") {
+				throw new Error(`${key} is required`);
+			}
+
+			const number = Number(value);
+
+			if (Number.isNaN(number)) {
+				throw new Error(`${key} must be a valid number`);
+			}
+
+			return number;
+		};
+
+		const getOptionalNumber = (key: string): number | null => {
+			const value = formData.get(key);
+
+			if (typeof value !== "string" || value.trim() === "") {
+				return null;
+			}
+
+			const number = Number(value);
+
+			if (Number.isNaN(number)) {
+				throw new Error(`${key} must be a valid number`);
+			}
+
+			return number;
 		};
 
 		const voucher: voucher = {
 			business_id: user.id,
-			code: getString("code"),
-			title: getString("title"),
-			description: getString("description"),
-			discount_type: getString("discount_type"),
-			discount_value: Number(getString("discount_value")),
-			min_purchase: Number(getString("min_purchase")),
-			max_discount: Number(getString("max_discount")),
-			expiry_date: getString("expiry_date"),
-			usage_limit: Number(getString("usage_limit")),
+			code: getRequiredString("code"),
+			title: getRequiredString("title"),
+			discount_type: getRequiredString("discount_type"),
+			discount_value: getRequiredNumber("discount_value"),
+			expiry_date: getRequiredString("expiry_date"),
+			usage_limit: getRequiredNumber("usage_limit"),
+			description: getOptionalString("description"),
+			min_purchase: getOptionalNumber("min_purchase"),
+			max_discount: getOptionalNumber("max_discount"),
 			created_at: new Date().toISOString(),
 		};
 
@@ -45,13 +95,14 @@ export const createVoucher = async (previousState, formData: FormData) => {
 		if (error) {
 			throw new Error(error.message);
 		}
-
-		revalidatePath("/voucher");
-		redirect("/voucher");
 	} catch (err) {
 		console.error(err);
+
 		return {
 			error: err instanceof Error ? err.message : "Unknown error",
 		};
 	}
+
+	revalidatePath("/voucher");
+	redirect("/voucher");
 };
