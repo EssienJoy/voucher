@@ -1,9 +1,8 @@
 import { Container, LogoutButton, MobileHeader } from "@/app/_components";
-import { getBusiness } from "@/app/_lib/api/business";
+import { getBusiness } from "@/app/_lib/api/data-service";
 
 const ProfilePage = async () => {
 	const { business } = await getBusiness();
-	// console.log(business);
 
 	return (
 		<>

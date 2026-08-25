@@ -1,6 +1,7 @@
 declare interface voucher {
 	created_at: string;
-	business_id: string;
+	id?: number;
+	business_id?: string;
 	code: string;
 	title: string;
 	description: string | null;

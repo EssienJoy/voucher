@@ -106,3 +106,24 @@ export const createVoucher = async (
 	revalidatePath("/voucher");
 	redirect("/voucher");
 };
+
+export async function deleteVoucher(voucherId: number | undefined) {
+	const supabase = await createSupabaseServerClientFunc();
+	const {
+		data: { user },
+		error: authError,
+	} = await supabase.auth.getUser();
+
+	if (authError || !user) {
+		throw new Error(authError?.message ?? "Not signed in");
+	}
+
+	const { error } = await supabase.from("voucher").delete().eq("id", voucherId);
+
+	if (error) {
+		console.error(error);
+		throw new Error("Voucher could not be deleted");
+	}
+
+	revalidatePath("/voucher");
+}
