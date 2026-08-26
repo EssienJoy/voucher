@@ -1,6 +1,6 @@
 import Container from "./Container";
+import Link from "./Link";
 import Logo from "./Logo";
-import Link from "next/link";
 
 const Header = () => {
 	return (
@@ -10,15 +10,9 @@ const Header = () => {
 					<Logo />
 
 					<nav className='flex items-center gap-3'>
-						<Link
-							href='/login'
-							className='rounded-xl px-4 py-2 text-sm font-semibold transition hover:bg-white/10'>
-							Log in
-						</Link>
+						<Link href='/login'>Log in</Link>
 
-						<Link
-							href='/signup'
-							className='rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#13013D] transition hover:bg-white/90'>
+						<Link href='/signup' secondary>
 							Get started
 						</Link>
 					</nav>

@@ -6,7 +6,6 @@ const Footer = () => {
 		<footer className='bg-[#13013D] py-12 text-white'>
 			<Container>
 				<div className='grid gap-10 md:grid-cols-3'>
-					{/* Brand */}
 					<div className='md:col-span-2'>
 						<h2 className='text-2xl font-bold'>Voucherly</h2>
 
@@ -16,7 +15,6 @@ const Footer = () => {
 						</p>
 					</div>
 
-					{/* Links */}
 					<div className='grid grid-cols-2 gap-8'>
 						<div>
 							<h3 className='text-sm font-semibold'>Product</h3>
@@ -55,25 +53,25 @@ const Footer = () => {
 
 							<ul className='mt-4 space-y-3 text-sm text-[#AEA9EF]'>
 								<li>
-									<a href='#' className='transition hover:text-white'>
+									<Link href='/about' className='transition hover:text-white'>
 										About
-									</a>
+									</Link>
 								</li>
 
 								<li>
-									<a href='#' className='transition hover:text-white'>
+									<a href='/contact' className='transition hover:text-white'>
 										Contact
 									</a>
 								</li>
 
 								<li>
-									<a href='#' className='transition hover:text-white'>
+									<a href='/privacy' className='transition hover:text-white'>
 										Privacy
 									</a>
 								</li>
 
 								<li>
-									<a href='#' className='transition hover:text-white'>
+									<a href='/terms' className='transition hover:text-white'>
 										Terms
 									</a>
 								</li>
