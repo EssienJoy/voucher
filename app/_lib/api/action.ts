@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createSupabaseServerClientFunc } from "../utils/server";
+import { createClient as createSupabaseServer } from "../supabase/server";
 
 type ActionState = {
 	error: string;
@@ -12,7 +12,7 @@ export const createVoucher = async (
 	_previousState: ActionState,
 	formData: FormData,
 ): Promise<ActionState> => {
-	const supabase = await createSupabaseServerClientFunc();
+	const supabase = await createSupabaseServer();
 
 	try {
 		const {
@@ -108,7 +108,7 @@ export const createVoucher = async (
 };
 
 export async function deleteVoucher(voucherId: number | undefined) {
-	const supabase = await createSupabaseServerClientFunc();
+	const supabase = await createSupabaseServer();
 	const {
 		data: { user },
 		error: authError,
