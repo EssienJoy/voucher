@@ -3,6 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import voucher from "@/public/voucher.jpg";
 
+export const metadata = {
+	title: "Login",
+};
+
 const Login = () => {
 	return (
 		<main className='grid md:grid-cols-2 min-h-dvh gap-5'>

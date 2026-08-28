@@ -1,7 +1,11 @@
-import { Container, Logo, SignUpForm } from "@/app/_components";
+import { Logo, SignUpForm } from "@/app/_components";
 import Image from "next/image";
 import Link from "next/link";
 import voucher from "@/public/voucher.jpg";
+
+export const metadata = {
+	title: "Sign Up",
+};
 
 const SignUp = () => {
 	return (
