@@ -1,7 +1,7 @@
 import { createClient as createSupabaseServer } from "../supabase/server";
-
 export async function getBusiness() {
 	const supabase = await createSupabaseServer();
+
 	const {
 		data: { user },
 		error: authError,
@@ -14,14 +14,34 @@ export async function getBusiness() {
 	const { data: business, error } = await supabase
 		.from("business")
 		.select("*")
-		.eq("user_id", user.id)
-		.single();
+		.eq("user_id", user.id);
 
 	if (error) throw new Error(error.message);
 
-	return { business };
-}
+	if (business.length > 0) {
+		return {
+			business: business[0],
+		};
+	}
 
+	const { data: newBusiness, error: insertError } = await supabase
+		.from("business")
+		.insert({
+			user_id: user.id,
+			email: user.email,
+			created_at: user.created_at,
+		})
+		.select("*")
+		.single();
+
+	if (insertError) {
+		throw new Error(insertError.message);
+	}
+
+	return {
+		business: newBusiness,
+	};
+}
 export const getVouchers = async function () {
 	const supabase = await createSupabaseServer();
 	const {

@@ -8,7 +8,10 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-	title: "Voucherly | Voucher Management",
+	title: {
+		template: "%s / Voucherly",
+		default: "Voucherly | Voucher Management",
+	},
 	description: "Create, manage, and redeem business vouchers with Voucherly.",
 };
 

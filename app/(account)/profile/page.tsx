@@ -10,30 +10,35 @@ const ProfilePage = async () => {
 
 			<section className='py-25'>
 				<Container>
-					<div className='mt-7 '>
-						<div className='space-y-5 '>
-							<div className='bg-white rounded-2xl  p-6'>
-								<p className='text-sm  font-medium text-text-secondary'>
+					<div className='mt-7'>
+						<div className='space-y-5'>
+							<div className='rounded-2xl bg-white p-6'>
+								<p className='text-sm font-medium text-text-secondary'>
 									Business Name
 								</p>
+
 								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									{business.business_name}
+									{business?.business_name ?? "Not Provided"}
 								</p>
 							</div>
 
-							<div className='bg-white rounded-2xl  p-6'>
+							<div className='rounded-2xl bg-white p-6'>
 								<p className='text-sm font-medium text-text-secondary'>Email</p>
+
 								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									{business.email}
+									{business?.email ?? "Not provided"}
 								</p>
 							</div>
 
-							<div className='bg-white rounded-2xl  p-6'>
+							<div className='rounded-2xl bg-white p-6'>
 								<p className='text-sm font-medium text-text-secondary'>
 									Account Created
 								</p>
+
 								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									20 August 2026
+									{business?.created_at
+										? new Date(business.created_at).toLocaleDateString()
+										: "Not Provided"}
 								</p>
 							</div>
 						</div>
