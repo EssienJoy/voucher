@@ -7,6 +7,7 @@ type LinkComponentProps = LinkProps &
 		children: ReactNode;
 		primary?: boolean;
 		secondary?: boolean;
+		accent?: boolean;
 	};
 
 const Link = ({
@@ -14,13 +15,16 @@ const Link = ({
 	primary,
 	secondary,
 	className,
+	accent,
 	...props
 }: LinkComponentProps) => {
 	const variantClassName = primary
 		? "bg-primary text-white"
 		: secondary
 			? "border border-gray-200 bg-white text-text-primary"
-			: "text-white hover:underline";
+			: accent
+				? "text-text-primary hover:underline"
+				: "text-white hover:underline";
 
 	return (
 		<NextLink

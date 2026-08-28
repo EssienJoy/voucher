@@ -3,6 +3,7 @@ import { Container, MobileHeader } from "@/app/_components";
 import Link from "next/link";
 import { getVouchers } from "@/app/_lib/api/data-service";
 import DeleteVoucher from "@/app/_components/DeleteVoucher";
+import { capitalize } from "@/app/_lib/utils";
 
 const VoucherPage = async () => {
 	const { vouchers }: { vouchers: voucher[] | null } = await getVouchers();
@@ -62,6 +63,7 @@ const VoucherPage = async () => {
 									discount_value,
 									expiry_date,
 									usage_limit,
+									status,
 								}) => (
 									<li key={id} className='rounded-2xl bg-white p-5 shadow-sm'>
 										<div className='flex items-start justify-between gap-4'>
@@ -76,7 +78,7 @@ const VoucherPage = async () => {
 											</div>
 
 											<span className='rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600'>
-												Active
+												{capitalize(status)}
 											</span>
 										</div>
 
@@ -126,7 +128,11 @@ const VoucherPage = async () => {
 												<p className='text-xs text-text-secondary'>Status</p>
 
 												<p className='mt-1 font-semibold text-green-600'>
-													Available
+													{status === "active"
+														? "Available"
+														: status === "expired"
+															? "Expired"
+															: "Redeemed"}
 												</p>
 											</div>
 										</div>

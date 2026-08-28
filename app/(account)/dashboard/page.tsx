@@ -1,22 +1,49 @@
-import { Container, MobileHeader } from "@/app/_components";
-import React from "react";
-import { ArrowRight, Plus } from "lucide-react";
-import Link from "next/link";
+import { Container, Link, MobileHeader } from "@/app/_components";
+import { ArrowRight } from "lucide-react";
+import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
+import { capitalize, getDaysUntilExpiry } from "@/app/_lib/utils";
 
 const DashboardPage = async () => {
+	const [vouchersResult, businessResult] = await Promise.all([
+		getVouchers(),
+		getBusiness(),
+	]);
+
+	const { vouchers }: { vouchers: voucher[] | null } = vouchersResult;
+
+	const { business } = businessResult;
+
+	const dashboard = [
+		{
+			title: "Total Vouchers",
+			num: vouchers.length,
+		},
+		{
+			title: "Active",
+			num: vouchers.length,
+		},
+		{
+			title: "Redeemed",
+			num: vouchers.length,
+		},
+		{
+			title: "Remaining",
+			num: vouchers.length,
+		},
+	];
 	return (
 		<>
 			<MobileHeader text='Dashboard' />
 
-			<section className='py-24 '>
+			<section className='py-25 sm:py-15 '>
 				<Container>
 					<div className='mb-8'>
-						<p className='text-sm font-medium text-text-secondary'>
-							Good morning
-						</p>
-
-						<h1 className='mt-1 text-2xl font-bold text-text-primary'>
-							Joy 👋
+						<h1 className='mt-1 text-3xl font-bold text-text-primary'>
+							Welcome,{" "}
+							{business.business_name
+								? capitalize(business.business_name)
+								: " "}{" "}
+							👋
 						</h1>
 
 						<p className='mt-2 text-sm text-text-secondary'>
@@ -25,35 +52,17 @@ const DashboardPage = async () => {
 					</div>
 
 					<section className='grid grid-cols-2 gap-3'>
-						<div className='rounded-2xl bg-white p-4'>
-							<p className='text-sm font-medium text-text-secondary'>
-								Total Vouchers
-							</p>
+						{dashboard.map((data) => (
+							<div key={data.title} className='rounded-2xl bg-white p-4'>
+								<p className='text-sm font-medium text-text-secondary'>
+									{data.title}
+								</p>
 
-							<p className='mt-2 text-3xl font-bold text-text-primary'>120</p>
-						</div>
-
-						<div className='rounded-2xl bg-primary p-4 text-white'>
-							<p className='text-sm font-medium text-white/80'>Active</p>
-
-							<p className='mt-2 text-3xl font-bold'>45</p>
-						</div>
-
-						<div className='rounded-2xl bg-white p-4'>
-							<p className='text-sm font-medium text-text-secondary'>
-								Redeemed
-							</p>
-
-							<p className='mt-2 text-3xl font-bold text-text-primary'>45</p>
-						</div>
-
-						<div className='rounded-2xl bg-white p-4'>
-							<p className='text-sm font-medium text-text-secondary'>
-								Remaining
-							</p>
-
-							<p className='mt-2 text-3xl font-bold text-text-primary'>30</p>
-						</div>
+								<p className='mt-2 text-3xl font-bold text-text-primary'>
+									{data.num}
+								</p>
+							</div>
+						))}
 					</section>
 
 					<section className='mt-10'>
@@ -68,98 +77,62 @@ const DashboardPage = async () => {
 								</p>
 							</div>
 
-							<Link
-								href='/account/vouchers'
-								className='flex items-center gap-1 text-sm font-semibold text-primary'>
+							<Link href='/voucher' accent className='flex gap-3 items-center'>
 								View all
 								<ArrowRight size={16} />
 							</Link>
 						</div>
 
 						<div className='space-y-3'>
-							<div className='rounded-2xl bg-white p-4'>
-								<div className='flex items-center justify-between gap-4'>
-									<div>
-										<p className='text-lg font-bold text-text-primary'>JOY10</p>
+							{vouchers.map((voucher) => (
+								<div key={voucher.id} className='rounded-2xl bg-white p-4'>
+									<div className='flex items-center justify-between gap-4'>
+										<div>
+											<p className='text-lg font-bold text-text-primary'>
+												{voucher.code}
+											</p>
 
-										<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
-											<span>10% off</span>
-											<span>•</span>
-											<span>10 uses</span>
+											<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
+												<span>
+													{voucher.discount_value}{" "}
+													{voucher.discount_type === "percentage" ? "%" : "$"}
+													{""}
+													off
+												</span>
+												<span>•</span>
+												<span>{voucher.usage_limit} uses</span>
+											</div>
+										</div>
+
+										<div className='text-right'>
+											<span
+												className='rounded-full bg-green-50 px-3 py-1 
+											text-xs font-semibold text-green-600'>
+												{capitalize(voucher.status)}
+											</span>
+
+											<p className='mt-2 text-xs text-text-secondary'>
+												{(() => {
+													const daysUntilExpiry = getDaysUntilExpiry(
+														voucher.expiry_date,
+													);
+
+													if (daysUntilExpiry <= 0) return "Expired";
+
+													return `Expires in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? "" : "s"}`;
+												})()}
+											</p>
 										</div>
 									</div>
-
-									<div className='text-right'>
-										<span className='rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600'>
-											Active
-										</span>
-
-										<p className='mt-2 text-xs text-text-secondary'>
-											Expires in 7 days
-										</p>
-									</div>
 								</div>
-							</div>
-
-							<div className='rounded-2xl bg-white p-4'>
-								<div className='flex items-center justify-between gap-4'>
-									<div>
-										<p className='text-lg font-bold text-text-primary'>
-											SUMMER20
-										</p>
-
-										<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
-											<span>20% off</span>
-											<span>•</span>
-											<span>25 uses</span>
-										</div>
-									</div>
-
-									<div className='text-right'>
-										<span className='rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600'>
-											Active
-										</span>
-
-										<p className='mt-2 text-xs text-text-secondary'>
-											Expires in 12 days
-										</p>
-									</div>
-								</div>
-							</div>
-
-							<div className='rounded-2xl bg-white p-4'>
-								<div className='flex items-center justify-between gap-4'>
-									<div>
-										<p className='text-lg font-bold text-text-primary'>
-											WELCOME15
-										</p>
-
-										<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
-											<span>15% off</span>
-											<span>•</span>
-											<span>50 uses</span>
-										</div>
-									</div>
-
-									<div className='text-right'>
-										<span className='rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500'>
-											Used
-										</span>
-
-										<p className='mt-2 text-xs text-text-secondary'>
-											50 / 50 redeemed
-										</p>
-									</div>
-								</div>
-							</div>
+							))}
 						</div>
 
-						<Link
-							href='/voucher/create'
-							className='mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-white transition hover:opacity-90'>
-							<Plus size={19} />
-							Create Voucher
-						</Link>
+						<div className='my-10 flex justify-end'>
+							<Link href='/voucher/create' primary>
+								Create Voucher
+							</Link>
+						</div>
 					</section>
 				</Container>
 			</section>

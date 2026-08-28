@@ -15,10 +15,10 @@ const AccountLayout = ({ children }: LayoutProps<"/">) => {
 				className='
 					sm:hidden
 					fixed bottom-0 left-0 z-50 w-full
-					border-t border-gray-200
-					bg-background-header/95
+					bg-primary
 					py-3 backdrop-blur-md
 					rounded-t-2xl
+					text-white
 				'>
 				<Container>
 					<nav>
@@ -26,7 +26,7 @@ const AccountLayout = ({ children }: LayoutProps<"/">) => {
 							<li>
 								<Link
 									href='/dashboard'
-									className='flex flex-col items-center gap-1 text-primary'>
+									className='flex flex-col items-center gap-1'>
 									<House size={21} strokeWidth={2} />
 									<span className='text-xs font-semibold'>Home</span>
 								</Link>
@@ -35,7 +35,7 @@ const AccountLayout = ({ children }: LayoutProps<"/">) => {
 							<li>
 								<Link
 									href='/voucher'
-									className='flex flex-col items-center gap-1 text-primary'>
+									className='flex flex-col items-center gap-1'>
 									<Ticket size={21} strokeWidth={2} />
 									<span className='text-xs font-semibold'>Vouchers</span>
 								</Link>
@@ -44,7 +44,7 @@ const AccountLayout = ({ children }: LayoutProps<"/">) => {
 							<li>
 								<Link
 									href='/profile'
-									className='flex flex-col items-center gap-1 text-primary'>
+									className='flex flex-col items-center gap-1'>
 									<User size={21} strokeWidth={2} />
 									<span className='text-xs font-semibold'>Profile</span>
 								</Link>

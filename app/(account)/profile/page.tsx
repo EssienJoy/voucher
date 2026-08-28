@@ -1,9 +1,4 @@
-import {
-	Container,
-	Input,
-	LogoutButton,
-	MobileHeader,
-} from "@/app/_components";
+import { Input, LogoutButton, MobileHeader } from "@/app/_components";
 import { getBusiness } from "@/app/_lib/api/data-service";
 
 const ProfilePage = async () => {
