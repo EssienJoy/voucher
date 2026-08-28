@@ -11,3 +11,4 @@ export { default as MobileHeader } from "./MobileHeader";
 export { default as CreateVoucherForm } from "./CreateVoucherForm";
 export { default as Input } from "./Input";
 export { default as Link } from "./Link";
+export { default as SideBar } from "./SideBar";

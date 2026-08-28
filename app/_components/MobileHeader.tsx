@@ -6,6 +6,7 @@ const Header = ({ text }: { text: string }) => {
 	return (
 		<header
 			className='
+				sm:hidden
 				fixed top-0 left-0 z-50 w-full
 				rounded-b-2xl
 				bg-background-header/95

@@ -1,15 +1,19 @@
 import React from "react";
 import Link from "next/link";
-import { Container } from "../_components";
+import { Container, SideBar } from "../_components";
 import { House, Ticket, User } from "lucide-react";
 
 const AccountLayout = ({ children }: LayoutProps<"/">) => {
 	return (
-		<div className='min-h-screen pb-24'>
-			{children}
+		<>
+			<div className='flex gap-5'>
+				<SideBar />
+				<main className='grow'>{children}</main>
+			</div>
 
 			<footer
 				className='
+					sm:hidden
 					fixed bottom-0 left-0 z-50 w-full
 					border-t border-gray-200
 					bg-background-header/95
@@ -49,7 +53,7 @@ const AccountLayout = ({ children }: LayoutProps<"/">) => {
 					</nav>
 				</Container>
 			</footer>
-		</div>
+		</>
 	);
 };
 

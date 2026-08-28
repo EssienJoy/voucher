@@ -4,14 +4,12 @@ import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 
 const DashboardPage = async () => {
-	// console.log(data);
 	return (
 		<>
 			<MobileHeader text='Dashboard' />
 
-			<section className='py-24 pb-28'>
+			<section className='py-24 '>
 				<Container>
-					{/* Welcome */}
 					<div className='mb-8'>
 						<p className='text-sm font-medium text-text-secondary'>
 							Good morning
@@ -26,7 +24,6 @@ const DashboardPage = async () => {
 						</p>
 					</div>
 
-					{/* Stats */}
 					<section className='grid grid-cols-2 gap-3'>
 						<div className='rounded-2xl bg-white p-4'>
 							<p className='text-sm font-medium text-text-secondary'>
@@ -59,7 +56,6 @@ const DashboardPage = async () => {
 						</div>
 					</section>
 
-					{/* Recent vouchers */}
 					<section className='mt-10'>
 						<div className='mb-4 flex items-center justify-between'>
 							<div>
@@ -81,7 +77,6 @@ const DashboardPage = async () => {
 						</div>
 
 						<div className='space-y-3'>
-							{/* Voucher */}
 							<div className='rounded-2xl bg-white p-4'>
 								<div className='flex items-center justify-between gap-4'>
 									<div>
@@ -159,7 +154,6 @@ const DashboardPage = async () => {
 							</div>
 						</div>
 
-						{/* Create button */}
 						<Link
 							href='/voucher/create'
 							className='mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-white transition hover:opacity-90'>

@@ -1,4 +1,9 @@
-import { Container, LogoutButton, MobileHeader } from "@/app/_components";
+import {
+	Container,
+	Input,
+	LogoutButton,
+	MobileHeader,
+} from "@/app/_components";
 import { getBusiness } from "@/app/_lib/api/data-service";
 
 const ProfilePage = async () => {
@@ -8,44 +13,40 @@ const ProfilePage = async () => {
 		<>
 			<MobileHeader text='Profile' />
 
-			<section className='py-25'>
-				<Container>
-					<div className='mt-7'>
-						<div className='space-y-5'>
-							<div className='rounded-2xl bg-white p-6'>
-								<p className='text-sm font-medium text-text-secondary'>
-									Business Name
-								</p>
-
-								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									{business?.business_name ?? "Not Provided"}
-								</p>
-							</div>
-
-							<div className='rounded-2xl bg-white p-6'>
-								<p className='text-sm font-medium text-text-secondary'>Email</p>
-
-								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									{business?.email ?? "Not provided"}
-								</p>
-							</div>
-
-							<div className='rounded-2xl bg-white p-6'>
-								<p className='text-sm font-medium text-text-secondary'>
-									Account Created
-								</p>
-
-								<p className='mt-1 text-lg font-semibold text-text-primary'>
-									{business?.created_at
+			<section className='py-25 sm:py-15'>
+				<div className='max-w-3xl mx-auto px-3'>
+					<h1 className='text-3xl font-bold mb-10 hidden sm:block'>Profile</h1>
+					<div className=''>
+						<form className='space-y-5 '>
+							<Input
+								type='text'
+								name='business_name'
+								label='Business Name:'
+								placeHolder={business?.business_name ?? "Not Provided"}
+							/>
+							<Input
+								type='text'
+								name='email'
+								label='Email:'
+								placeHolder={business?.email ?? "Not Provided"}
+							/>
+							<Input
+								type='text'
+								name='created_at'
+								label='Account Created:'
+								placeHolder={
+									business?.created_at
 										? new Date(business.created_at).toLocaleDateString()
-										: "Not Provided"}
-								</p>
-							</div>
-						</div>
+										: "Not Provided"
+								}
+							/>
+						</form>
 					</div>
 
-					<LogoutButton />
-				</Container>
+					<div className='sm:hidden'>
+						<LogoutButton />
+					</div>
+				</div>
 			</section>
 		</>
 	);
