@@ -11,5 +11,5 @@ declare interface voucher {
 	min_purchase: number | null;
 	max_discount: number | null;
 	expiry_date: string;
-	status: "active" | "used" | "expired";
+	status: "active" | "exhausted" | "expired";
 }

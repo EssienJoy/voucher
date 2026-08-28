@@ -11,6 +11,12 @@ const DashboardPage = async () => {
 
 	const { vouchers }: { vouchers: voucher[] | null } = vouchersResult;
 
+	const active = vouchers.filter((v) => v.status === "active").length;
+
+	const exhausted = vouchers.filter((v) => v.status === "exhausted").length;
+
+	const expired = vouchers.filter((v) => v.status === "expired").length;
+
 	const { business } = businessResult;
 
 	const dashboard = [
@@ -20,15 +26,15 @@ const DashboardPage = async () => {
 		},
 		{
 			title: "Active",
-			num: vouchers.length,
+			num: active,
 		},
 		{
-			title: "Redeemed",
-			num: vouchers.length,
+			title: "Exhausted",
+			num: exhausted,
 		},
 		{
-			title: "Remaining",
-			num: vouchers.length,
+			title: "Expired",
+			num: expired,
 		},
 	];
 	return (
@@ -94,10 +100,9 @@ const DashboardPage = async () => {
 
 											<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
 												<span>
-													{voucher.discount_value}{" "}
-													{voucher.discount_type === "percentage" ? "%" : "$"}
-													{""}
-													off
+													{voucher.discount_value}
+													{voucher.discount_type === "percentage" ? "%" : "₦"}
+													{""} off
 												</span>
 												<span>•</span>
 												<span>{voucher.usage_limit} uses</span>
