@@ -5,6 +5,10 @@ import { Container, CreateVoucherForm, MobileHeader } from "@/app/_components";
 // 	return { title: `Cabin ${name}` };
 // }
 
+export const metadata = {
+	title: "Create Voucher",
+};
+
 const CreateVoucherPage = () => {
 	return (
 		<>

@@ -3,6 +3,10 @@ import { ArrowRight } from "lucide-react";
 import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
 import { capitalize, getDaysUntilExpiry } from "@/app/_lib/utils";
 
+export const metadata = {
+	title: "Dashboard",
+};
+
 const DashboardPage = async () => {
 	const [vouchersResult, businessResult] = await Promise.all([
 		getVouchers(),
@@ -134,7 +138,7 @@ const DashboardPage = async () => {
 						</div>
 
 						<div className='my-10 flex justify-end'>
-							<Link href='/voucher/create' primary>
+							<Link href='/voucher/create-voucher' primary>
 								Create Voucher
 							</Link>
 						</div>

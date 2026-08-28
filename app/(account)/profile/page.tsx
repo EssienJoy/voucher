@@ -1,6 +1,10 @@
 import { Input, LogoutButton, MobileHeader } from "@/app/_components";
 import { getBusiness } from "@/app/_lib/api/data-service";
 
+export const metadata = {
+	title: "Profile",
+};
+
 const ProfilePage = async () => {
 	const { business } = await getBusiness();
 

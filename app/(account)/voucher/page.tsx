@@ -5,6 +5,10 @@ import { getVouchers } from "@/app/_lib/api/data-service";
 import DeleteVoucher from "@/app/_components/DeleteVoucher";
 import { capitalize } from "@/app/_lib/utils";
 
+export const metadata = {
+	title: "Voucher",
+};
+
 const VoucherPage = async () => {
 	const { vouchers }: { vouchers: voucher[] | null } = await getVouchers();
 	return (
@@ -25,7 +29,7 @@ const VoucherPage = async () => {
 						</div>
 
 						<Link
-							href='/voucher/create'
+							href='/voucher/create-voucher'
 							className='rounded-xl  bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90'>
 							Create
 						</Link>
@@ -138,9 +142,11 @@ const VoucherPage = async () => {
 										</div>
 
 										<div className='mt-6 flex gap-3 border-t border-gray-100 pt-5'>
-											<button className='flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-text-primary transition hover:bg-gray-50'>
+											<Link
+												href='/voucher/edit-voucher'
+												className='flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-text-primary transition hover:bg-gray-50'>
 												Edit
-											</button>
+											</Link>
 											<DeleteVoucher id={id} />
 										</div>
 									</li>
