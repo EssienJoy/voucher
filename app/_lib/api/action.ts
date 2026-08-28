@@ -88,6 +88,7 @@ export const createVoucher = async (
 			min_purchase: getOptionalNumber("min_purchase"),
 			max_discount: getOptionalNumber("max_discount"),
 			created_at: new Date().toISOString(),
+			status: "active",
 		};
 
 		const { error } = await supabase.from("voucher").insert(voucher);
