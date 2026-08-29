@@ -3,18 +3,35 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient as createSupabaseServer } from "../supabase/server";
+import {
+	getRequiredString,
+	getOptionalString,
+	getRequiredNumber,
+	getOptionalNumber,
+} from "@/app/_lib/utils";
 
-type ActionState = {
-	error: string;
-};
+export async function getVoucher(voucherId: string) {
+	const supabase = await createSupabaseServer();
+	const { data, error } = await supabase
+		.from("voucher")
+		.select("*")
+		.eq("id", voucherId)
+		.single();
+
+	if (error) {
+		console.error(error);
+		return null;
+	}
+
+	return data;
+}
 
 export const createVoucher = async (
-	_previousState: ActionState,
+	_previousState: initialState,
 	formData: FormData,
-): Promise<ActionState> => {
-	const supabase = await createSupabaseServer();
-
+): Promise<initialState> => {
 	try {
+		const supabase = await createSupabaseServer();
 		const {
 			data: { user },
 			error: authError,
@@ -24,89 +41,93 @@ export const createVoucher = async (
 			throw new Error(authError?.message ?? "Not signed in");
 		}
 
-		const getRequiredString = (key: string): string => {
-			const value = formData.get(key);
-
-			if (typeof value !== "string" || value.trim() === "") {
-				throw new Error(`${key} is required`);
-			}
-
-			return value.trim();
-		};
-
-		const getOptionalString = (key: string): string | null => {
-			const value = formData.get(key);
-
-			if (typeof value !== "string" || value.trim() === "") {
-				return null;
-			}
-
-			return value.trim();
-		};
-
-		const getRequiredNumber = (key: string): number => {
-			const value = formData.get(key);
-
-			if (typeof value !== "string" || value.trim() === "") {
-				throw new Error(`${key} is required`);
-			}
-
-			const number = Number(value);
-
-			if (Number.isNaN(number)) {
-				throw new Error(`${key} must be a valid number`);
-			}
-
-			return number;
-		};
-
-		const getOptionalNumber = (key: string): number | null => {
-			const value = formData.get(key);
-
-			if (typeof value !== "string" || value.trim() === "") {
-				return null;
-			}
-
-			const number = Number(value);
-
-			if (Number.isNaN(number)) {
-				throw new Error(`${key} must be a valid number`);
-			}
-
-			return number;
-		};
-
-		const voucher: voucher = {
+		const voucher: VoucherInsert = {
 			business_id: user.id,
-			code: getRequiredString("code"),
-			title: getRequiredString("title"),
-			discount_type: getRequiredString("discount_type"),
-			discount_value: getRequiredNumber("discount_value"),
-			expiry_date: getRequiredString("expiry_date"),
-			usage_limit: getRequiredNumber("usage_limit"),
-			description: getOptionalString("description"),
-			min_purchase: getOptionalNumber("min_purchase"),
-			max_discount: getOptionalNumber("max_discount"),
+			title: getRequiredString(formData, "title"),
+			code: getRequiredString(formData, "code"),
+			discount_type: getRequiredString(formData, "discount_type") as
+				| "percentage"
+				| "fixed",
+			discount_value: getRequiredNumber(formData, "discount_value"),
+			expiry_date: getRequiredString(formData, "expiry_date"),
+			usage_limit: getOptionalNumber(formData, "usage_limit"),
+			description: getOptionalString(formData, "description"),
+			min_purchase: getOptionalNumber(formData, "min_purchase"),
+			max_discount: getOptionalNumber(formData, "max_discount"),
 			created_at: new Date().toISOString(),
 			status: "active",
 		};
 
-		const { error } = await supabase.from("voucher").insert(voucher);
+		const { error } = await supabase.from("voucher").insert(voucher).select();
 
 		if (error) {
 			throw new Error(error.message);
 		}
+
+		revalidatePath("/voucher");
+		redirect("/voucher");
 	} catch (err) {
 		console.error(err);
 
 		return {
 			error: err instanceof Error ? err.message : "Unknown error",
+			success: null,
 		};
 	}
-
-	revalidatePath("/voucher");
-	redirect("/voucher");
 };
+
+export async function updateVoucher(
+	voucherId: string,
+	_previousState: initialState,
+	formData: FormData,
+): Promise<initialState> {
+	try {
+		const supabase = await createSupabaseServer();
+
+		const {
+			data: { user },
+			error: authError,
+		} = await supabase.auth.getUser();
+
+		if (authError || !user) {
+			throw new Error(authError?.message ?? "Not signed in");
+		}
+
+		const voucher: VoucherUpdate = {
+			title: getRequiredString(formData, "title"),
+			code: getRequiredString(formData, "code"),
+			discount_type: getRequiredString(formData, "discount_type") as
+				| "percentage"
+				| "fixed",
+			discount_value: getRequiredNumber(formData, "discount_value"),
+			expiry_date: getRequiredString(formData, "expiry_date"),
+			usage_limit: getOptionalNumber(formData, "usage_limit"),
+			description: getOptionalString(formData, "description"),
+			min_purchase: getOptionalNumber(formData, "min_purchase"),
+			max_discount: getOptionalNumber(formData, "max_discount"),
+		};
+
+		const { error } = await supabase
+			.from("voucher")
+			.update(voucher)
+			.eq("id", voucherId);
+
+		if (error) throw new Error("Error updating voucher", { cause: error });
+
+		revalidatePath("/voucher");
+		revalidatePath(`/voucher/edit-voucher/${voucherId}`);
+		return {
+			error: null,
+			success: "Voucher Updated Sucesfully",
+		};
+	} catch (err) {
+		console.error(err);
+		return {
+			error: err instanceof Error ? err.message : "Unknown error",
+			success: null,
+		};
+	}
+}
 
 export async function deleteVoucher(voucherId: number | undefined) {
 	const supabase = await createSupabaseServer();

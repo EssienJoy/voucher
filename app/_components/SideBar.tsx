@@ -11,7 +11,7 @@ const SideBar = () => {
 	return (
 		<aside
 			className='px-5 py-16 sm:w-1/3 lg:w-1/5 hidden
-        min-h-dvh sm:flex flex-col  bg-primary text-white'>
+        min-h-dvh sm:flex flex-col gap-60  bg-primary text-white'>
 			<nav className='flex flex-col gap-5 '>
 				{navigationLinks.map((link) => {
 					const Icon = link.icon;
@@ -28,7 +28,7 @@ const SideBar = () => {
 				})}
 			</nav>
 
-			<div className='my-auto'>
+			<div className=''>
 				<LogoutButton />
 			</div>
 		</aside>

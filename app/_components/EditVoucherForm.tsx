@@ -1,16 +1,21 @@
 "use client";
 
 import React, { useActionState } from "react";
-import { createVoucher } from "../_lib/api/action";
+import { updateVoucher } from "../_lib/api/action";
 import Input from "./Input";
+import Link from "./Link";
+import { useParams } from "next/navigation";
 
-const CreateVoucherForm = () => {
-	const [state, submitAction, isPending] = useActionState(createVoucher, {
+const EditvoucherForm = () => {
+	const params = useParams();
+	console.log(params);
+	const [state, submitAction, isPending] = useActionState(updateVoucher, {
 		error: "",
+		voucher,
 	});
 
 	return (
-		<form action={submitAction} className='space-y-6'>
+		<form action={submitAction} className=''>
 			<fieldset className='grid grid-cols-2 gap-5'>
 				<legend className='text-xl font-semibold mb-5'>Voucher</legend>
 				<Input
@@ -33,9 +38,9 @@ const CreateVoucherForm = () => {
 					text='Customers will use this code when redeeming the voucher.'
 				/>
 
-				<div className='space-y-2 col-span-2'>
+				<div className=' col-span-2'>
 					<label htmlFor='description' className='text-sm font-semibold'>
-						Description
+						Description:
 					</label>
 
 					<textarea
@@ -46,7 +51,7 @@ const CreateVoucherForm = () => {
 						className='w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'
 					/>
 
-					<p className='font-bold text-green-600'>optional</p>
+					<p className='font-bold text-xs text-green-600'>optional</p>
 					<p className='text-xs text-text-secondary'>
 						Give customers a short explanation of what this voucher offers.
 					</p>
@@ -56,12 +61,12 @@ const CreateVoucherForm = () => {
 			<fieldset className='space-y-2 grid grid-cols-2 gap-5 my-7'>
 				<legend className='text-xl font-semibold mb-5'>Discount</legend>
 				<label htmlFor='discountType' className='text-sm font-semibold'>
-					<span>Type</span>
+					<span className=''>Type:</span>
 					<select
 						id='discountType'
 						name='discount_type'
 						defaultValue='percentage'
-						className='w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'>
+						className='w-full rounded-xl mt-5 border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10'>
 						<option value='percentage'>Percentage</option>
 						<option value='fixed'>Fixed amount</option>
 					</select>
@@ -100,35 +105,38 @@ const CreateVoucherForm = () => {
 				/>
 			</fieldset>
 
-			<Input
-				type='date'
-				required
-				label='Expiry date'
-				name='expiry_date'
-				text='The date when this voucher will expire.'
-			/>
+			<fieldset className='grid grid-cols-2 gap-5'>
+				<legend className='text-xl font-semibold mb-5'>
+					Date & Usage Limit
+				</legend>
+				<Input
+					type='date'
+					required
+					label='Expiry date'
+					name='expiry_date'
+					text='The date when this voucher will expire.'
+				/>
 
-			<Input
-				type='number'
-				label='Maximum uses'
-				name='usage_limit'
-				min='1'
-				placeHolder='100'
-				text='	Maximum number of times this voucher can be redeemed'
-			/>
+				<Input
+					type='number'
+					label='Maximum uses'
+					name='usage_limit'
+					min='1'
+					placeHolder='100'
+					text='	Maximum number of times this voucher can be redeemed'
+				/>
+			</fieldset>
 
 			<div className='flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end'>
-				<button
-					type='button'
-					className='rounded-xl border border-gray-200 px-6 py-3 text-sm font-semibold transition hover:bg-gray-50'>
+				<Link href='/voucher' secondary>
 					Cancel
-				</button>
+				</Link>
 
 				<button
 					type='submit'
 					disabled={isPending}
 					className='rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90'>
-					{isPending ? "Creating..." : "Create Voucher"}
+					{isPending ? "Editing..." : "Edit Voucher"}
 				</button>
 			</div>
 			<p className='text-red-500'>{state.error}</p>
@@ -136,4 +144,4 @@ const CreateVoucherForm = () => {
 	);
 };
 
-export default CreateVoucherForm;
+export default EditvoucherForm;

@@ -1,4 +1,6 @@
-import { Container, CreateVoucherForm, MobileHeader } from "@/app/_components";
+import { Container, MobileHeader } from "@/app/_components";
+import { createVoucher } from "@/app/_lib/api/action";
+import VoucherForm from "@/app/_components/VoucherForm";
 
 // export async function generateMetadata({ params }) {
 // 	const { name } = await getCabin(params.cabinId);
@@ -6,7 +8,7 @@ import { Container, CreateVoucherForm, MobileHeader } from "@/app/_components";
 // }
 
 export const metadata = {
-	title: "Create Voucher",
+	title: "Create ",
 };
 
 const CreateVoucherPage = () => {
@@ -27,8 +29,7 @@ const CreateVoucherPage = () => {
 									Create a voucher that your customers can use for discounts.
 								</p>
 							</div>
-
-							<CreateVoucherForm />
+							<VoucherForm action={createVoucher} />
 						</div>
 					</div>
 				</Container>

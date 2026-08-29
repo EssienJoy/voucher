@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/app/_components";
 import { ArrowLeft, Ticket } from "lucide-react";
+import ArrowBack from "./_components/ArrowBack";
 
 const NotFound = () => {
 	return (
@@ -18,8 +19,8 @@ const NotFound = () => {
 					<h1 className='mt-4 text-2xl font-bold'>Page not found</h1>
 
 					<p className='mx-auto mt-3 max-w-sm text-sm leading-6 text-text-secondary'>
-						Sorry, we couldn't find the page you're looking for. It may have
-						been moved or no longer exists.
+						Sorry, we couldn&apos;t find the page you&apos;re looking for. It
+						may have been moved or no longer exists.
 					</p>
 
 					{/* Action */}
@@ -29,6 +30,7 @@ const NotFound = () => {
 						<ArrowLeft size={18} />
 						Back to home
 					</Link>
+					<ArrowBack />
 				</div>
 			</Container>
 		</main>

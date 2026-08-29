@@ -143,7 +143,7 @@ const VoucherPage = async () => {
 
 										<div className='mt-6 flex gap-3 border-t border-gray-100 pt-5'>
 											<Link
-												href='/voucher/edit-voucher'
+												href={`/voucher/edit-voucher/${id}`}
 												className='flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-text-primary transition hover:bg-gray-50'>
 												Edit
 											</Link>
