@@ -26,6 +26,94 @@ export async function getVoucher(voucherId: string) {
 	return data;
 }
 
+// Get Voucher By Code
+export async function getVoucherByCode(
+	_previousState: VoucherResult,
+	formData: FormData,
+): Promise<VoucherResult> {
+	try {
+		const supabase = await createSupabaseServer();
+		const voucherCode = getRequiredString(formData, "code").toLowerCase();
+		// console.log(voucherCode);
+
+		const { data, error } = await supabase
+			.from("voucher")
+			.select(
+				"code,status,expiry_date,discount_type,discount_value,id,business_id",
+			)
+			.eq("code", voucherCode)
+			.maybeSingle();
+
+		if (error)
+			throw new Error("Something went wrong looking up the voucher.", {
+				cause: error,
+			});
+
+		if (!data) throw new Error("Voucher code does not exist.");
+		if (data.status === "expired") throw new Error("Voucher is not available.");
+
+		// console.log(data);
+
+		return {
+			data,
+			error: null,
+			success: "Voucher is available.",
+		};
+	} catch (err) {
+		console.error(err);
+		return {
+			data: null,
+			error: err instanceof Error ? err.message : "Unknown error",
+			success: null,
+		};
+	}
+}
+
+export const redeemVoucher = async (
+	voucherId: number,
+	businessId: number,
+): Promise<RedeemResult> => {
+	try {
+		const supabase = await createSupabaseServer();
+
+		const { data: voucher, error: fetchError } = await supabase
+			.from("voucher")
+			.select("id, status, usage_limit, redemption_count")
+			.eq("id", voucherId)
+			.maybeSingle();
+
+		if (fetchError)
+			throw new Error("Could not verify voucher.", { cause: fetchError });
+		if (!voucher) throw new Error("Voucher not found.");
+		if (voucher.status === "expired") throw new Error("Voucher has expired.");
+		if (voucher.redemption_count >= voucher.usage_limit)
+			throw new Error("Voucher has reached its usage limit.");
+
+		const { error: insertError } = await supabase.from("redemption").insert({
+			voucher_id: voucherId,
+			business_id: businessId,
+			redeemed_at: new Date().toISOString(),
+		});
+
+		if (insertError)
+			throw new Error("Could not redeem voucher.", { cause: insertError });
+
+		return {
+			data: null,
+			error: null,
+			success: "Voucher redeemed successfully.",
+		};
+	} catch (err) {
+		console.error(err);
+		return {
+			data: null,
+			error: err instanceof Error ? err.message : "Unknown error",
+			success: null,
+		};
+	}
+};
+
+// Create Voucher
 export const createVoucher = async (
 	_previousState: initialState,
 	formData: FormData,
@@ -44,7 +132,7 @@ export const createVoucher = async (
 		const voucher: VoucherInsert = {
 			business_id: user.id,
 			title: getRequiredString(formData, "title"),
-			code: getRequiredString(formData, "code"),
+			code: getRequiredString(formData, "code").toLowerCase(),
 			discount_type: getRequiredString(formData, "discount_type") as
 				| "percentage"
 				| "fixed",

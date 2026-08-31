@@ -1,3 +1,4 @@
+"use server";
 import { createClient as createSupabaseClient } from "../supabase/client";
 export const signInWithEmailAndPassword = async ({
 	email,

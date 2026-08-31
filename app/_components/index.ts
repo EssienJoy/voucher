@@ -13,3 +13,5 @@ export { default as Input } from "./Input";
 export { default as Link } from "./Link";
 export { default as SideBar } from "./SideBar";
 export { default as EditVoucherForm } from "./EditVoucherForm";
+export { default as VerifyVoucher } from "./VerifyVoucher";
+export { default as RedeemVoucher } from "./RedeemVoucher";

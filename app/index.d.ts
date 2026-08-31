@@ -1,6 +1,5 @@
 declare type initialState = {
 	error: string | null;
-	// voucher: voucher | null;
 	success: string | null;
 };
 
@@ -20,7 +19,7 @@ declare interface voucher extends baseVoucher {
 	id: number;
 	business_id: string;
 	created_at: string;
-	status: "active" | "exhausted" | "expired";
+	status: "active" | "redeemed" | "expired";
 }
 
 declare type VoucherInsert = baseVoucher & {
@@ -30,3 +29,29 @@ declare type VoucherInsert = baseVoucher & {
 };
 
 declare type VoucherUpdate = Partial<baseVoucher>;
+
+declare type VoucherResult = initialState & {
+	data: {
+		code: string;
+		status: "expired" | "active";
+		expiry_date: string;
+		discount_type: string;
+		discount_value: number;
+		id: number;
+		business_id: number;
+	} | null;
+};
+
+declare type redeemVoucher = {
+	code: string;
+	status: "expired" | "active";
+	expiry_date: string;
+	discount_type: string;
+	discount_value: number;
+	id: number;
+	business_id: number;
+};
+
+declare type RedeemResult = initialState & {
+	data: null;
+};
