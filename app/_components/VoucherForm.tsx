@@ -30,7 +30,7 @@ const VoucherForm = ({
 					required
 					maxLength={30}
 					minLength={3}
-					defaultValue={defaultValues?.title as string}
+					defaultValue={defaultValues?.title?.toUpperCase() as string}
 					placeHolder='e.g. WELCOME DISCOUNT'
 				/>
 				<Input
@@ -40,7 +40,7 @@ const VoucherForm = ({
 					required
 					maxLength={20}
 					minLength={2}
-					defaultValue={defaultValues?.code as string}
+					defaultValue={defaultValues?.code?.toUpperCase() as string}
 					placeHolder='e.g. WELCOME120'
 					text='Customers will use this code when redeeming the voucher.'
 				/>
@@ -100,7 +100,7 @@ const VoucherForm = ({
 					type='number'
 					label='Minimum purchase'
 					name='min_purchase'
-					defaultValue={defaultValues?.min_purchase as number}
+					defaultValue={defaultValues?.min_purchase?.toLocaleString() as number}
 					min='0'
 					placeHolder='₦ 10,000'
 					optional={true}
@@ -110,7 +110,7 @@ const VoucherForm = ({
 					type='number'
 					label='Maximum discount'
 					name='max_discount'
-					defaultValue={defaultValues?.max_discount as number}
+					defaultValue={defaultValues?.max_discount?.toLocaleString() as number}
 					min='0'
 					optional={true}
 					placeHolder='₦ 5,000'

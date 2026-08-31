@@ -65,6 +65,7 @@ export const createVoucher = async (
 		}
 
 		revalidatePath("/voucher");
+		revalidatePath("/dashboard");
 		redirect("/voucher");
 	} catch (err) {
 		console.error(err);
@@ -115,6 +116,7 @@ export async function updateVoucher(
 		if (error) throw new Error("Error updating voucher", { cause: error });
 
 		revalidatePath("/voucher");
+		revalidatePath("/dashboard");
 		revalidatePath(`/voucher/edit-voucher/${voucherId}`);
 		return {
 			error: null,

@@ -3,7 +3,7 @@ import { Container, MobileHeader } from "@/app/_components";
 import Link from "next/link";
 import { getVouchers } from "@/app/_lib/api/data-service";
 import DeleteVoucher from "@/app/_components/DeleteVoucher";
-import { capitalize } from "@/app/_lib/utils";
+// import { capitalize } from "@/app/_lib/utils";
 
 export const metadata = {
 	title: "Voucher",
@@ -81,8 +81,13 @@ const VoucherPage = async () => {
 												</p>
 											</div>
 
-											<span className='rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600'>
-												{capitalize(status)}
+											<span
+												className={`rounded-full capitalize bg-green-50 px-3 py-1 text-xs font-semibold ${
+													status === "expired"
+														? "text-red-700 bg-red-50"
+														: "text-green-600 bg-green-50"
+												}`}>
+												{status}
 											</span>
 										</div>
 
@@ -131,12 +136,13 @@ const VoucherPage = async () => {
 											<div>
 												<p className='text-xs text-text-secondary'>Status</p>
 
-												<p className='mt-1 font-semibold text-green-600'>
-													{status === "active"
-														? "Available"
-														: status === "expired"
-															? "Expired"
-															: "Redeemed"}
+												<p
+													className={`mt-1 font-semibold ${
+														status === "expired"
+															? "text-red-600"
+															: "text-green-600"
+													}`}>
+													{status === "active" ? "Available" : "Expired"}
 												</p>
 											</div>
 										</div>

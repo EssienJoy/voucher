@@ -1,7 +1,7 @@
 import { Container, Link, MobileHeader } from "@/app/_components";
 import { ArrowRight } from "lucide-react";
 import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
-import { capitalize, getDaysUntilExpiry } from "@/app/_lib/utils";
+// import { capitalize } from "@/app/_lib/utils";
 
 export const metadata = {
 	title: "Dashboard",
@@ -17,8 +17,6 @@ const DashboardPage = async () => {
 
 	const active = vouchers.filter((v) => v.status === "active").length;
 
-	const exhausted = vouchers.filter((v) => v.status === "exhausted").length;
-
 	const expired = vouchers.filter((v) => v.status === "expired").length;
 
 	const { business } = businessResult;
@@ -33,11 +31,7 @@ const DashboardPage = async () => {
 			num: active,
 		},
 		{
-			title: "Exhausted",
-			num: exhausted,
-		},
-		{
-			title: "Expired",
+			title: "Epired",
 			num: expired,
 		},
 	];
@@ -48,11 +42,8 @@ const DashboardPage = async () => {
 			<section className='py-25 sm:py-15 '>
 				<Container>
 					<div className='mb-8'>
-						<h1 className='mt-1 text-3xl font-bold text-text-primary'>
-							Welcome,{" "}
-							{business.business_name
-								? capitalize(business.business_name)
-								: " "}{" "}
+						<h1 className='mt-1 capitalize text-3xl font-bold text-text-primary'>
+							Welcome, {business.business_name ? business.business_name : " "}{" "}
 							👋
 						</h1>
 
@@ -61,7 +52,7 @@ const DashboardPage = async () => {
 						</p>
 					</div>
 
-					<section className='grid grid-cols-2 gap-3'>
+					<section className='grid grid-cols-3 gap-3'>
 						{dashboard.map((data) => (
 							<div key={data.title} className='rounded-2xl bg-white p-4'>
 								<p className='text-sm font-medium text-text-secondary'>
@@ -115,21 +106,17 @@ const DashboardPage = async () => {
 
 										<div className='text-right'>
 											<span
-												className='rounded-full bg-green-50 px-3 py-1 
-											text-xs font-semibold text-green-600'>
-												{capitalize(voucher.status)}
+												className={`rounded-full bg-green-50 px-3 py-1 
+											text-xs font-semibold capitalize text-green-600 ${
+												voucher.status === "expired"
+													? "text-red-700 bg-red-50"
+													: "text-green-600 bg-green-50"
+											}`}>
+												{voucher.status}
 											</span>
 
-											<p className='mt-2 text-xs text-text-secondary'>
-												{(() => {
-													const daysUntilExpiry = getDaysUntilExpiry(
-														voucher.expiry_date,
-													);
-
-													if (daysUntilExpiry <= 0) return "Expired";
-
-													return `Expires in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? "" : "s"}`;
-												})()}
+											<p className='mt-2 capitalize text-xs text-text-secondary'>
+												{voucher.status}
 											</p>
 										</div>
 									</div>

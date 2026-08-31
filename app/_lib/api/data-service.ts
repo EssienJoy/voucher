@@ -1,7 +1,11 @@
+// "use cache";
 import { createClient as createSupabaseServer } from "../supabase/server";
-export async function getBusiness() {
-	const supabase = await createSupabaseServer();
+// import { cacheLife } from "next/cache";
 
+export async function getBusiness() {
+	// cacheLife("hours");
+
+	const supabase = await createSupabaseServer();
 	const {
 		data: { user },
 		error: authError,
