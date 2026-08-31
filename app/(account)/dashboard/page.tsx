@@ -1,6 +1,14 @@
-import { Container, Link, MobileHeader } from "@/app/_components";
+import {
+	Container,
+	DashboardStatsSkeleton,
+	DashboardVoucherSkeleton,
+	Link,
+	MobileHeader,
+	VoucherCardSkeleton,
+} from "@/app/_components";
 import { ArrowRight } from "lucide-react";
 import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
+import { Suspense } from "react";
 // import { capitalize } from "@/app/_lib/utils";
 
 export const metadata = {
@@ -52,19 +60,21 @@ const DashboardPage = async () => {
 						</p>
 					</div>
 
-					<section className='grid grid-cols-3 gap-3'>
-						{dashboard.map((data) => (
-							<div key={data.title} className='rounded-2xl bg-white p-4'>
-								<p className='text-sm font-medium text-text-secondary'>
-									{data.title}
-								</p>
+					<Suspense fallback={<DashboardStatsSkeleton />}>
+						<section className='grid grid-cols-3 gap-3'>
+							{dashboard.map((data) => (
+								<div key={data.title} className='rounded-2xl bg-white p-4'>
+									<p className='text-sm font-medium text-text-secondary'>
+										{data.title}
+									</p>
 
-								<p className='mt-2 text-3xl font-bold text-text-primary'>
-									{data.num}
-								</p>
-							</div>
-						))}
-					</section>
+									<p className='mt-2 text-3xl font-bold text-text-primary'>
+										{data.num}
+									</p>
+								</div>
+							))}
+						</section>
+					</Suspense>
 
 					<section className='mt-10'>
 						<div className='mb-4 flex items-center justify-between'>
@@ -84,45 +94,47 @@ const DashboardPage = async () => {
 							</Link>
 						</div>
 
-						<div className='space-y-3'>
-							{vouchers.map((voucher) => (
-								<div key={voucher.id} className='rounded-2xl bg-white p-4'>
-									<div className='flex items-center justify-between gap-4'>
-										<div>
-											<p className='text-lg font-bold text-text-primary'>
-												{voucher.code}
-											</p>
+						<Suspense fallback={<DashboardVoucherSkeleton />}>
+							<div className='space-y-3'>
+								{vouchers.map((voucher) => (
+									<div key={voucher.id} className='rounded-2xl bg-white p-4'>
+										<div className='flex items-center justify-between gap-4'>
+											<div>
+												<p className='text-lg font-bold uppercase text-text-primary'>
+													{voucher.code}
+												</p>
 
-											<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
-												<span>
-													{voucher.discount_value}
-													{voucher.discount_type === "percentage" ? "%" : "₦"}
-													{""} off
-												</span>
-												<span>•</span>
-												<span>{voucher.usage_limit} uses</span>
+												<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
+													<span>
+														{voucher.discount_value}
+														{voucher.discount_type === "percentage" ? "%" : "₦"}
+														{""} off
+													</span>
+													<span>•</span>
+													<span>{voucher.usage_limit} uses</span>
+												</div>
 											</div>
-										</div>
 
-										<div className='text-right'>
-											<span
-												className={`rounded-full bg-green-50 px-3 py-1 
+											<div className='text-right'>
+												<span
+													className={`rounded-full bg-green-50 px-3 py-1 
 											text-xs font-semibold capitalize text-green-600 ${
 												voucher.status === "expired"
 													? "text-red-700 bg-red-50"
 													: "text-green-600 bg-green-50"
 											}`}>
-												{voucher.status}
-											</span>
+													{voucher.status}
+												</span>
 
-											<p className='mt-2 capitalize text-xs text-text-secondary'>
-												{voucher.status}
-											</p>
+												<p className='mt-2 capitalize text-xs text-text-secondary'>
+													{voucher.status}
+												</p>
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
-						</div>
+								))}
+							</div>
+						</Suspense>
 
 						<div className='my-10 flex justify-end'>
 							<Link href='/voucher/create-voucher' primary>

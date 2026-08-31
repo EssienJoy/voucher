@@ -2,7 +2,7 @@ import React from "react";
 import Container from "./Container";
 import { CheckCircle, Share2, TicketCheck } from "lucide-react";
 
-const About = () => {
+const HowItWorks = () => {
 	const steps = [
 		{
 			icon: CheckCircle,
@@ -113,4 +113,4 @@ const About = () => {
 	);
 };
 
-export default About;
+export default HowItWorks;

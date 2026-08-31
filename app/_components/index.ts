@@ -1,7 +1,7 @@
 export { default as Container } from "./Container";
 export { default as Header } from "./Header";
 export { default as Logo } from "./Logo";
-export { default as About } from "./About";
+export { default as HowItWorks } from "./HowItWorks";
 export { default as Hero } from "./Hero";
 export { default as Footer } from "./Footer";
 export { default as SignUpForm } from "./SignUpForm";
@@ -15,3 +15,6 @@ export { default as SideBar } from "./SideBar";
 export { default as EditVoucherForm } from "./EditVoucherForm";
 export { default as VerifyVoucher } from "./VerifyVoucher";
 export { default as RedeemVoucher } from "./RedeemVoucher";
+export { default as VoucherCardSkeleton } from "./VoucherCardSkeleton";
+export { default as DashboardStatsSkeleton } from "./DashboardStatsSkeleton";
+export { default as DashboardVoucherSkeleton } from "./DashboardVoucherSkeleton";

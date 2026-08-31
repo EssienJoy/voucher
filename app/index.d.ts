@@ -19,6 +19,7 @@ declare interface voucher extends baseVoucher {
 	id: number;
 	business_id: string;
 	created_at: string;
+	redemption_count: number;
 	status: "active" | "redeemed" | "expired";
 }
 

@@ -22,10 +22,10 @@ const page = async ({ params }: { params: Promise<{ voucherId: string }> }) => {
 		<>
 			<MobileHeader text='Edit Voucher' />
 
-			<section className='py-15'>
+			<section className='py-25'>
 				<Container>
 					<div className='mx-auto max-w-2xl'>
-						<div className='rounded-2xl bg-white p-6 md:p-8'>
+						<div className='rounded-2xl bg-white p-2 md:p-8'>
 							<h1 className='text-2xl font-bold text-text-primary mb-7'>
 								Edit voucher
 							</h1>

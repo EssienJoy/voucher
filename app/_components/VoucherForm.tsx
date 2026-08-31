@@ -31,7 +31,7 @@ const VoucherForm = ({
 					maxLength={30}
 					minLength={3}
 					defaultValue={defaultValues?.title?.toUpperCase() as string}
-					placeHolder='e.g. WELCOME DISCOUNT'
+					placeHolder='e.g. Welcome Discount'
 				/>
 				<Input
 					type='text'
@@ -143,7 +143,7 @@ const VoucherForm = ({
 			</fieldset>
 
 			<div className='flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end'>
-				<Link href='/voucher' secondary>
+				<Link href='/voucher' secondary className='text-center'>
 					Cancel
 				</Link>
 

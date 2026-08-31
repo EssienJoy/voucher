@@ -19,7 +19,7 @@ const CreateVoucherPage = () => {
 			<section className='py-25'>
 				<Container>
 					<div className='mx-auto max-w-2xl'>
-						<div className='rounded-2xl bg-white p-6 md:p-8'>
+						<div className='rounded-2xl bg-white p-2 md:p-8'>
 							<div className='mb-8'>
 								<h1 className='text-2xl font-bold text-text-primary'>
 									Create a voucher
