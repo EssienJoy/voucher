@@ -8,17 +8,12 @@ export const signInWithEmailAndPassword = async (
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 	const supabase = createSupabaseClient();
+
 	try {
 		const {
 			data: { user },
 			error: authError,
 		} = await supabase.auth.getUser();
-
-		// if (user)
-		// 	return {
-		// 		error: null,
-		// 		success: null,
-		// 	};
 
 		if (authError || !user) {
 			const { error } = await supabase.auth.signInWithPassword({
@@ -29,19 +24,16 @@ export const signInWithEmailAndPassword = async (
 			if (error) {
 				throw new Error(error.message, { cause: error });
 			}
-
-			return {
-				error: null,
-				success: "Sign in succesful.",
-			};
 		}
 	} catch (err) {
 		console.error(err);
+
 		return {
 			error: err instanceof Error ? err.message : "Unknown error",
 			success: null,
 		};
 	}
+
 	redirect("/dashboard");
 };
 
@@ -60,24 +52,16 @@ export const signUpWithEmailAndPassword = async (
 			error: authError,
 		} = await supabase.auth.getUser();
 
-		// if (user)
-		// 	return {
-		// 		error: null,
-		// 		success: null,
-		// 	};
-
 		if (authError || !user) {
 			const { error } = await supabase.auth.signUp({
 				email,
 				password,
 				options: {
-					emailRedirectTo: `/dashboard`,
+					emailRedirectTo: `${window.location.origin}/dashboard`,
 				},
 			});
 
 			if (error) throw new Error(error.message);
-
-			return { error: null, success: "Sign up sucessful" };
 		}
 	} catch (err) {
 		console.error(err);
