@@ -1,5 +1,6 @@
 import { Container, MobileHeader } from "@/app/_components";
-import { getVoucher, updateVoucher } from "@/app/_lib/api/action";
+import { updateVoucher } from "@/app/_lib/api/action";
+import { getVoucher } from "@/app/_lib/api/data-service";
 import VoucherForm from "@/app/_components/VoucherForm";
 import React from "react";
 import { notFound } from "next/navigation";
@@ -11,7 +12,6 @@ export const metadata = {
 const page = async ({ params }: { params: Promise<{ voucherId: string }> }) => {
 	const { voucherId } = await params;
 	const voucher = await getVoucher(voucherId);
-	// console.log(voucher);
 
 	if (!voucher) {
 		notFound();

@@ -1,7 +1,5 @@
-import React from "react";
 import { Container, Footer, Header, VerifyVoucher } from "@/app/_components";
-import { TicketCheck, ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { TicketCheck } from "lucide-react";
 
 const RedeemVoucherPage = async () => {
 	return (

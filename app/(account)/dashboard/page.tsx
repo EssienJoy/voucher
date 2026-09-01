@@ -4,7 +4,6 @@ import {
 	DashboardVoucherSkeleton,
 	Link,
 	MobileHeader,
-	VoucherCardSkeleton,
 } from "@/app/_components";
 import { ArrowRight } from "lucide-react";
 import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
@@ -23,16 +22,16 @@ const DashboardPage = async () => {
 
 	const { vouchers }: { vouchers: voucher[] | null } = vouchersResult;
 
-	const active = vouchers.filter((v) => v.status === "active").length;
+	const active = vouchers?.filter((v) => v.status === "active").length ?? 0;
 
-	const expired = vouchers.filter((v) => v.status === "expired").length;
+	const expired = vouchers?.filter((v) => v.status === "expired").length ?? 0;
 
 	const { business } = businessResult;
 
 	const dashboard = [
 		{
 			title: "Total Vouchers",
-			num: vouchers.length,
+			num: vouchers?.length,
 		},
 		{
 			title: "Active",
@@ -95,45 +94,59 @@ const DashboardPage = async () => {
 						</div>
 
 						<Suspense fallback={<DashboardVoucherSkeleton />}>
-							<div className='space-y-3'>
-								{vouchers.map((voucher) => (
-									<div key={voucher.id} className='rounded-2xl bg-white p-4'>
-										<div className='flex items-center justify-between gap-4'>
-											<div>
-												<p className='text-lg font-bold uppercase text-text-primary'>
-													{voucher.code}
-												</p>
+							{!vouchers ? (
+								<div className='rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 text-center'>
+									<p className='font-semibold text-text-primary'>
+										No vouchers yet
+									</p>
 
-												<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
-													<span>
-														{voucher.discount_value}
-														{voucher.discount_type === "percentage" ? "%" : "₦"}
-														{""} off
-													</span>
-													<span>•</span>
-													<span>{voucher.usage_limit} uses</span>
+									<p className='mt-1 text-sm text-text-secondary'>
+										Create your first voucher to start managing your promotions.
+									</p>
+								</div>
+							) : (
+								<div className='space-y-3'>
+									{vouchers?.slice(0, 3)?.map((voucher) => (
+										<div key={voucher.id} className='rounded-2xl bg-white p-4'>
+											<div className='flex items-center justify-between gap-4'>
+												<div>
+													<p className='text-lg font-bold uppercase text-text-primary'>
+														{voucher.code}
+													</p>
+
+													<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
+														<span>
+															{voucher.discount_value}
+															{voucher.discount_type === "percentage"
+																? "%"
+																: "₦"}
+															{""} off
+														</span>
+														<span>•</span>
+														<span>{voucher.usage_limit} uses</span>
+													</div>
 												</div>
-											</div>
 
-											<div className='text-right'>
-												<span
-													className={`rounded-full bg-green-50 px-3 py-1 
+												<div className='text-right'>
+													<span
+														className={`rounded-full bg-green-50 px-3 py-1 
 											text-xs font-semibold capitalize text-green-600 ${
 												voucher.status === "expired"
 													? "text-red-700 bg-red-50"
 													: "text-green-600 bg-green-50"
 											}`}>
-													{voucher.status}
-												</span>
+														{voucher.status}
+													</span>
 
-												<p className='mt-2 capitalize text-xs text-text-secondary'>
-													{voucher.status}
-												</p>
+													<p className='mt-2 capitalize text-xs text-text-secondary'>
+														{voucher.status}
+													</p>
+												</div>
 											</div>
 										</div>
-									</div>
-								))}
-							</div>
+									))}
+								</div>
+							)}
 						</Suspense>
 
 						<div className='my-10 flex justify-end'>

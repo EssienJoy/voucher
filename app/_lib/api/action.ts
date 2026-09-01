@@ -10,23 +10,6 @@ import {
 	getOptionalNumber,
 } from "@/app/_lib/utils";
 
-export async function getVoucher(voucherId: string) {
-	const supabase = await createSupabaseServer();
-	const { data, error } = await supabase
-		.from("voucher")
-		.select("*")
-		.eq("id", voucherId)
-		.single();
-
-	if (error) {
-		console.error(error);
-		return null;
-	}
-
-	return data;
-}
-
-// Get Voucher By Code
 export async function getVoucherByCode(
 	_previousState: VoucherResult,
 	formData: FormData,
@@ -34,7 +17,6 @@ export async function getVoucherByCode(
 	try {
 		const supabase = await createSupabaseServer();
 		const voucherCode = getRequiredString(formData, "code").toLowerCase();
-		// console.log(voucherCode);
 
 		const { data, error } = await supabase
 			.from("voucher")
@@ -51,8 +33,6 @@ export async function getVoucherByCode(
 
 		if (!data) throw new Error("Voucher code does not exist.");
 		if (data.status === "expired") throw new Error("Voucher is not available.");
-
-		// console.log(data);
 
 		return {
 			data,
@@ -113,7 +93,6 @@ export const redeemVoucher = async (
 	}
 };
 
-// Create Voucher
 export const createVoucher = async (
 	_previousState: initialState,
 	formData: FormData,
@@ -151,10 +130,6 @@ export const createVoucher = async (
 		if (error) {
 			throw new Error(error.message);
 		}
-
-		revalidatePath("/voucher");
-		revalidatePath("/dashboard");
-		redirect("/voucher");
 	} catch (err) {
 		console.error(err);
 
@@ -163,6 +138,10 @@ export const createVoucher = async (
 			success: null,
 		};
 	}
+
+	revalidatePath("/voucher");
+	revalidatePath("/dashboard");
+	redirect("/voucher");
 };
 
 export async function updateVoucher(

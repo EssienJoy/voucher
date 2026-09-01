@@ -1,3 +1,10 @@
+declare type Business = {
+	business_name: string | null;
+	email: string;
+	id: number;
+	created_at: string;
+};
+
 declare type initialState = {
 	error: string | null;
 	success: string | null;

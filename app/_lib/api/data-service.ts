@@ -1,10 +1,8 @@
-// "use cache";
 import { createClient as createSupabaseServer } from "../supabase/server";
-// import { cacheLife } from "next/cache";
 
-export async function getBusiness() {
-	// cacheLife("hours");
-
+export async function getBusiness(): Promise<{
+	business: Business;
+}> {
 	const supabase = await createSupabaseServer();
 	const {
 		data: { user },
@@ -18,13 +16,14 @@ export async function getBusiness() {
 	const { data: business, error } = await supabase
 		.from("business")
 		.select("business_name,created_at,email,id")
-		.eq("user_id", user.id);
+		.eq("user_id", user.id)
+		.maybeSingle();
 
 	if (error) throw new Error(error.message);
 
-	if (business.length > 0) {
+	if (business) {
 		return {
-			business: business[0],
+			business,
 		};
 	}
 
@@ -36,7 +35,7 @@ export async function getBusiness() {
 			created_at: user.created_at,
 		})
 		.select("*")
-		.single();
+		.maybeSingle();
 
 	if (insertError) {
 		throw new Error(insertError.message);
@@ -47,16 +46,11 @@ export async function getBusiness() {
 	};
 }
 
-export const getVouchers = async function () {
+export const getVouchers = async function (): Promise<{
+	vouchers: voucher[] | null;
+}> {
 	const supabase = await createSupabaseServer();
-	const {
-		data: { user },
-		error: authError,
-	} = await supabase.auth.getUser();
 
-	if (authError || !user) {
-		throw new Error(authError?.message ?? "Not signed in");
-	}
 	const { business } = await getBusiness();
 	const { data: vouchers, error } = await supabase
 		.from("voucher")
@@ -68,7 +62,28 @@ export const getVouchers = async function () {
 		throw new Error("Vouchers could not be loaded");
 	}
 
+	if (!vouchers?.length) {
+		return {
+			vouchers: null,
+		};
+	}
+
 	return {
 		vouchers,
 	};
 };
+
+export async function getVoucher(
+	voucherId: string,
+): Promise<baseVoucher | null> {
+	const supabase = await createSupabaseServer();
+	const { data, error } = await supabase
+		.from("voucher")
+		.select("*")
+		.eq("id", voucherId)
+		.single();
+
+	if (error) throw new Error(error.message);
+
+	return data;
+}
