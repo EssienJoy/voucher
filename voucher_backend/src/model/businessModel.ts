@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const businessSchema = new mongoose.Schema(
   {
     business_name: { type: String, default: null, trim: true },
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, 'Email or Password is required'],
       unique: true,
       lowercase: true,
       trim: true,
@@ -25,8 +26,8 @@ const businessSchema = new mongoose.Schema(
     },
     google_id: {
       type: String,
-      required: false,
-      unique: true,
+      // unique: true,
+      default: null,
     },
     confirmPassword: {
       type: String,
@@ -48,74 +49,27 @@ const businessSchema = new mongoose.Schema(
     provider_type: { type: String, default: null },
     providers: { type: [String], default: [] },
     last_sign_in_at: { type: Date, default: null },
-    created_at: { type: Date, default: () => Date.now() },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   },
 );
 
+businessSchema.pre('save', async function () {
+  if (!this.password) return;
+  if (!this.isModified('password')) return;
+  this.password = await bcrypt.hash(this.password, 12);
+
+  this.confirmPassword = null;
+
+  // next();
+});
+
+export type BusinessDocument = mongoose.HydratedDocument<
+  mongoose.InferSchemaType<typeof businessSchema>
+>;
+
 const Business = mongoose.model('Business', businessSchema);
 export default Business;
-
-// userSchema.pre('save', async function (next) {
-//   // Only run this function if password
-//   //  was actually modified
-//   if (!this.isModified('password')) return;
-
-//   // Hash the password
-//   this.password = await bcrypt.hash(this.password, 12);
-
-//   // Delete password confirmed field
-//   this.confirmPassword = undefined;
-//   // next();
-// });
-
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password') || this.isNew) return;
-
-//   this.passwordChangedAt = Date.now() - 1000;
-//   // next();
-// });
-
-// userSchema.pre(/^find/, async function (next) {
-//   this.find({ active: { $ne: false } });
-// });
-
-// // Instance method is amethod available
-// //  on all docs of a collection
-// userSchema.methods.correctPassword = async function (
-//   candidatePassword,
-//   userPassword,
-// ) {
-//   return await bcrypt.compare(candidatePassword, userPassword);
-// };
-
-// userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
-//   if (this.passwordChangedAt) {
-//     const changeTimeStamp = parseInt(
-//       this.passwordChangedAt.getTime() / 1000,
-//       10,
-//     );
-
-//     return JWTTimestamp < changeTimeStamp;
-//   }
-
-//   return false;
-// };
-
-// userSchema.methods.createPasswordResetToken = function () {
-//   const resetToken = crypto.randomBytes(32).toString('hex');
-//   this.passwordResetToken = crypto
-//     .createHash('sha256')
-//     .update(resetToken)
-//     .digest('hex');
-
-//   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-
-//   return resetToken;
-// };
-// const User = mongoose.model('User', userSchema);
-
-// module.exports = User;

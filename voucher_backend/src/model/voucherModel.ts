@@ -25,11 +25,11 @@ const voucherSchema = new mongoose.Schema(
       default: 'active',
     },
     redemption_count: { type: Number, default: 0 },
-    created_at: { type: Date, default: () => Date.now() },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   },
 );
 

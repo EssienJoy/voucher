@@ -7,8 +7,28 @@ export const getUser = async (
   next: NextFunction,
 ) => {
   try {
-    // Will come from req.user once auth middleware is implemented
     const business = await Business.findById(req.user?.id);
+
+    res.status(200).json({
+      status: 'success',
+      data: business,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const business = await Business.findByIdAndUpdate(
+      req.user?.id,
+      { business_name: req.body.business_name },
+      { new: true, runValidators: true },
+    );
 
     res.status(200).json({
       status: 'success',

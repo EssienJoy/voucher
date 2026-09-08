@@ -5,8 +5,11 @@ import {
   updateVoucher,
   deleteVoucher,
 } from '../controller/voucherController.js';
+import { protect } from '../controller/authController.js';
 
 const voucherRouter = express.Router();
+
+voucherRouter.use(protect);
 
 voucherRouter.route('/').post(createVoucher).get(getVoucher);
 

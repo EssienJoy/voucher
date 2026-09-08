@@ -7,7 +7,7 @@ export const createVoucher = async (
   next: NextFunction,
 ) => {
   try {
-    const businessId = req.body.business_id;
+    const businessId = req.user?.id;
 
     const voucher = await Voucher.create({
       ...req.body,
@@ -30,7 +30,7 @@ export const getVoucher = async (
 ) => {
   try {
     // Placeholder until auth is implemented — should come from req.user.businessId
-    const businessId = '6a9d66c59bd7b843cb156153';
+    const businessId = req.user?.id;
 
     const vouchers = await Voucher.find({ business_id: businessId });
 
@@ -51,7 +51,7 @@ export const updateVoucher = async (
 ) => {
   try {
     // Placeholder until auth is implemented — should come from req.user.businessId
-    const businessId = '6a9d66c59bd7b843cb156153';
+    const businessId = req.user?.id;
 
     const voucher = await Voucher.findOneAndUpdate(
       { _id: req.params.id, business_id: businessId },
@@ -74,8 +74,7 @@ export const deleteVoucher = async (
   next: NextFunction,
 ) => {
   try {
-    // Placeholder until auth is implemented — should come from req.user.businessId
-    const businessId = '6a9d66c59bd7b843cb156153';
+    const businessId = req.user?.id;
 
     const voucher = await Voucher.findOneAndDelete({
       _id: req.params.id,
