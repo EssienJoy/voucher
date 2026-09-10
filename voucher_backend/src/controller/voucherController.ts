@@ -1,5 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import Voucher from '../model/voucherModel.js';
+import mongoose from 'mongoose';
 
 export const createVoucher = async (
   req: Request,
@@ -30,7 +31,7 @@ export const getVoucher = async (
 ) => {
   try {
     // Placeholder until auth is implemented — should come from req.user.businessId
-    const businessId = req.user?.id;
+    const businessId = new mongoose.Types.ObjectId(req.user?.id);
 
     const vouchers = await Voucher.find({ business_id: businessId });
 
@@ -51,7 +52,7 @@ export const updateVoucher = async (
 ) => {
   try {
     // Placeholder until auth is implemented — should come from req.user.businessId
-    const businessId = req.user?.id;
+    const businessId = new mongoose.Types.ObjectId(req.user?.id);
 
     const voucher = await Voucher.findOneAndUpdate(
       { _id: req.params.id, business_id: businessId },
@@ -74,7 +75,7 @@ export const deleteVoucher = async (
   next: NextFunction,
 ) => {
   try {
-    const businessId = req.user?.id;
+    const businessId = new mongoose.Types.ObjectId(req.user?.id);
 
     const voucher = await Voucher.findOneAndDelete({
       _id: req.params.id,
