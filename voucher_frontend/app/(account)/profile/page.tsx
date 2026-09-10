@@ -7,7 +7,7 @@ export const metadata = {
 
 const ProfilePage = async () => {
 	const { business } = await getBusiness();
-	// console.log(business);
+	console.log(business);
 
 	return (
 		<>
@@ -38,8 +38,8 @@ const ProfilePage = async () => {
 								name='created_at'
 								label='Account Created'
 								placeHolder={
-									business?.created_at
-										? new Date(business.created_at).toLocaleDateString()
+									business?.createdAt
+										? new Date(business.createdAt).toLocaleDateString()
 										: "Not Provided"
 								}
 							/>

@@ -6,7 +6,7 @@ import { House, Ticket, User } from "lucide-react";
 const AccountLayout = ({ children }: LayoutProps<"/">) => {
 	return (
 		<>
-			<div className='flex gap-5'>
+			<div className='block sm:flex gap-5'>
 				<SideBar />
 				<main className='grow'>{children}</main>
 			</div>

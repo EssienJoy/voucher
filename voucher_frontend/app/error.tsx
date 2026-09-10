@@ -26,11 +26,11 @@ export default function Error({ error, reset }: ErrorProps) {
 						</p>
 					)}
 
-					<div className='flex itmes-center gap-5 justify-center'>
+					<div className='flex mt-5 itmes-center gap-5 justify-center'>
 						<button
 							type='button'
 							onClick={reset}
-							className='rounded-xl bg-primary px-6 py-3 text-lg font-semibold text-white transition hover:opacity-90'>
+							className='rounded-xl grow bg-primary px-6 py-3 text-lg font-semibold text-white transition hover:opacity-90'>
 							Try again
 						</button>
 						<button

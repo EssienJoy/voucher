@@ -40,7 +40,7 @@ const VoucherPage = async () => {
 
 					<section>
 						<aside className='mb-8 overflow-x-auto'>
-							<div className='flex  gap-2 rounded-xl bg-white p-1'>
+							<div className='flex flex-wrap  gap-1 rounded-xl bg-white p-1.5'>
 								<button className='rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white'>
 									All
 								</button>
@@ -60,12 +60,12 @@ const VoucherPage = async () => {
 						</aside>
 
 						{!vouchers ? (
-							<div className='rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 text-center'>
-								<p className='font-semibold text-text-primary'>
+							<div className='rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 '>
+								<p className='font-semibold text-center text-2xl text-text-primary'>
 									No vouchers yet
 								</p>
 
-								<p className='mt-1 text-sm text-text-secondary'>
+								<p className='mt-3 text-sm text-text-secondary'>
 									Create your first voucher to start managing your promotions.
 								</p>
 							</div>
@@ -77,7 +77,7 @@ const VoucherPage = async () => {
 											id,
 											code,
 											title,
-											created_at,
+											createdAt,
 											discount_type,
 											discount_value,
 											expiry_date,
@@ -95,8 +95,7 @@ const VoucherPage = async () => {
 														</p>
 
 														<p className='mt-1 text-sm text-text-secondary'>
-															Created{" "}
-															{new Date(created_at).toLocaleDateString()}
+															Created {new Date(createdAt).toLocaleDateString()}
 														</p>
 													</div>
 

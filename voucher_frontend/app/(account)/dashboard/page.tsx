@@ -27,6 +27,7 @@ const DashboardPage = async () => {
 	const expired = vouchers?.filter((v) => v.status === "expired").length ?? 0;
 
 	const { business } = businessResult;
+	console.log(business);
 
 	const dashboard = [
 		{
@@ -50,7 +51,7 @@ const DashboardPage = async () => {
 				<Container>
 					<div className='mb-8'>
 						<h1 className='mt-1 capitalize text-3xl font-bold text-text-primary'>
-							Welcome, {business.business_name ? business.business_name : " "}{" "}
+							Welcome, {business?.business_name ? business.business_name : " "}{" "}
 							👋
 						</h1>
 
@@ -60,15 +61,21 @@ const DashboardPage = async () => {
 					</div>
 
 					<Suspense fallback={<DashboardStatsSkeleton />}>
-						<section className='grid grid-cols-3 gap-3'>
-							{dashboard.map((data) => (
-								<div key={data.title} className='rounded-2xl bg-white p-4'>
+						<section
+							className={`
+							grid grid-cols-2 sm:grid-cols-3 gap-3`}>
+							{dashboard.map((data, i) => (
+								<div
+									key={data.title}
+									className={`
+								${i + 1 === 3 ? "col-span-2" : ""}
+								rounded-2xl bg-white p-4`}>
 									<p className='text-sm font-medium text-text-secondary'>
 										{data.title}
 									</p>
 
 									<p className='mt-2 text-3xl font-bold text-text-primary'>
-										{data.num}
+										{data.num ? data.num : "0"}
 									</p>
 								</div>
 							))}
@@ -95,12 +102,12 @@ const DashboardPage = async () => {
 
 						<Suspense fallback={<DashboardVoucherSkeleton />}>
 							{!vouchers ? (
-								<div className='rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 text-center'>
-									<p className='font-semibold text-text-primary'>
+								<div className='rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 '>
+									<p className='font-semibold text-2xl text-text-primary text-center'>
 										No vouchers yet
 									</p>
 
-									<p className='mt-1 text-sm text-text-secondary'>
+									<p className='mt-3 text-sm text-text-secondary'>
 										Create your first voucher to start managing your promotions.
 									</p>
 								</div>

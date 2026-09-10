@@ -2,7 +2,7 @@ declare type Business = {
 	business_name: string | null;
 	email: string;
 	id: string;
-	created_at: string;
+	createdAt: string;
 };
 
 declare type initialState = {
@@ -25,7 +25,7 @@ declare interface baseVoucher {
 declare interface voucher extends baseVoucher {
 	id: string;
 	business_id: string;
-	created_at: string;
+	createdAt: string;
 	redemption_count: number;
 	status: "active" | "redeemed" | "expired";
 }
