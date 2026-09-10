@@ -2,7 +2,7 @@
 
 import { deleteVoucher } from "@/app/_lib/api/action";
 
-const DeleteVoucher = ({ id }: { id: number | undefined }) => {
+const DeleteVoucher = ({ id }: { id: string | undefined }) => {
 	return (
 		<button
 			onClick={async () => await deleteVoucher(id)}

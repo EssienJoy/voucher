@@ -1,18 +1,19 @@
 "use client";
 import { useActionState } from "react";
-import { signUpWithEmailAndPassword } from "../_lib/api/auth";
+import { signUp } from "../_lib/api/auth";
 import Input from "./Input";
 
 const SignUpForm = () => {
-	const [state, submitAction, isPending] = useActionState(
-		signUpWithEmailAndPassword,
-		{
-			error: null,
-			success: null,
-		},
-	);
+	// signUp is a real Server Action with the exact shape useActionState
+	// expects, and it redirects to /dashboard itself on success — see
+	// auth.ts for the full explanation of how the cookie reaches the
+	// browser even though this code runs on the Next.js server.
+	const [state, formAction, isPending] = useActionState(signUp, {
+		error: null,
+		success: null,
+	});
 	return (
-		<form action={submitAction} className='mt-8 space-y-5'>
+		<form action={formAction} className='mt-8 space-y-5'>
 			<Input
 				label='Email'
 				type='text'
@@ -26,6 +27,13 @@ const SignUpForm = () => {
 				type='password'
 				placeHolder='Create a password'
 				name='password'
+			/>
+			<Input
+				required
+				label='Confirm Password'
+				type='password'
+				placeHolder='Confirm your password'
+				name='confirmPassword'
 			/>
 
 			<button

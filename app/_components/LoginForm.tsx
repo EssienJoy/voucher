@@ -1,19 +1,21 @@
 "use client";
 import { useActionState } from "react";
-import { signInWithEmailAndPassword } from "../_lib/api/auth";
+import { login } from "../_lib/api/auth";
 import Input from "./Input";
 
 const LoginForm = () => {
-	const [state, submitAction, isPending] = useActionState(
-		signInWithEmailAndPassword,
-		{
-			error: null,
-			success: null,
-		},
-	);
+	// login (in auth.ts) is a real Server Action: it already matches the
+	// (previousState, formData) => newState shape useActionState wants,
+	// and it already redirects to /dashboard itself on success (server-side,
+	// via redirect()). So we can hand it to useActionState directly — no
+	// wrapper function needed here.
+	const [state, formAction, isPending] = useActionState(login, {
+		error: null,
+		success: null,
+	});
 
 	return (
-		<form action={submitAction} className='mt-8 space-y-5'>
+		<form action={formAction} className='mt-8 space-y-5'>
 			<Input
 				label='Email'
 				type='text'

@@ -2,7 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient as createSupabaseServer } from "../supabase/server";
+import { apiFetch } from "./http";
+
 import {
 	getRequiredString,
 	getOptionalString,
@@ -10,106 +11,12 @@ import {
 	getOptionalNumber,
 } from "@/app/_lib/utils";
 
-export async function getVoucherByCode(
-	_previousState: VoucherResult,
-	formData: FormData,
-): Promise<VoucherResult> {
-	try {
-		const supabase = await createSupabaseServer();
-		const voucherCode = getRequiredString(formData, "code").toLowerCase();
-
-		const { data, error } = await supabase
-			.from("voucher")
-			.select(
-				"code,status,expiry_date,discount_type,discount_value,id,business_id",
-			)
-			.eq("code", voucherCode)
-			.maybeSingle();
-
-		if (error)
-			throw new Error("Something went wrong looking up the voucher.", {
-				cause: error,
-			});
-
-		if (!data) throw new Error("Voucher code does not exist.");
-		if (data.status === "expired") throw new Error("Voucher is not available.");
-
-		return {
-			data,
-			error: null,
-			success: "Voucher is available.",
-		};
-	} catch (err) {
-		console.error(err);
-		return {
-			data: null,
-			error: err instanceof Error ? err.message : "Unknown error",
-			success: null,
-		};
-	}
-}
-
-export const redeemVoucher = async (
-	voucherId: number,
-	businessId: number,
-): Promise<RedeemResult> => {
-	try {
-		const supabase = await createSupabaseServer();
-
-		const { data: voucher, error: fetchError } = await supabase
-			.from("voucher")
-			.select("id, status, usage_limit, redemption_count")
-			.eq("id", voucherId)
-			.maybeSingle();
-
-		if (fetchError)
-			throw new Error("Could not verify voucher.", { cause: fetchError });
-		if (!voucher) throw new Error("Voucher not found.");
-		if (voucher.status === "expired") throw new Error("Voucher has expired.");
-		if (voucher.redemption_count >= voucher.usage_limit)
-			throw new Error("Voucher has reached its usage limit.");
-
-		const { error: insertError } = await supabase.from("redemption").insert({
-			voucher_id: voucherId,
-			business_id: businessId,
-			redeemed_at: new Date().toISOString(),
-		});
-
-		if (insertError)
-			throw new Error("Could not redeem voucher.", { cause: insertError });
-
-		return {
-			data: null,
-			error: null,
-			success: "Voucher redeemed successfully.",
-		};
-	} catch (err) {
-		console.error(err);
-		return {
-			data: null,
-			error: err instanceof Error ? err.message : "Unknown error",
-			success: null,
-		};
-	}
-};
-
 export const createVoucher = async (
 	_previousState: initialState,
 	formData: FormData,
 ): Promise<initialState> => {
 	try {
-		const supabase = await createSupabaseServer();
-		const {
-			data: { user },
-			error: authError,
-		} = await supabase.auth.getUser();
-
-		if (authError || !user) {
-			throw new Error(authError?.message ?? "Not signed in");
-		}
-
-		const voucher: VoucherInsert = {
-			business_id: user.id,
+		const voucher = {
 			title: getRequiredString(formData, "title"),
 			code: getRequiredString(formData, "code").toLowerCase(),
 			discount_type: getRequiredString(formData, "discount_type") as
@@ -121,15 +28,18 @@ export const createVoucher = async (
 			description: getOptionalString(formData, "description"),
 			min_purchase: getOptionalNumber(formData, "min_purchase"),
 			max_discount: getOptionalNumber(formData, "max_discount"),
-			created_at: new Date().toISOString(),
-			status: "active",
 		};
 
-		const { error } = await supabase.from("voucher").insert(voucher).select();
+		// apiFetch (see http.ts) attaches the logged-in user's token as an
+		// Authorization header, so Express's `protect` + `req.user` know
+		// which business this voucher belongs to.
+		const result = await apiFetch("voucher", {
+			method: "POST",
+			body: JSON.stringify(voucher),
+		});
 
-		if (error) {
-			throw new Error(error.message);
-		}
+		if (result.status === "fail" || result.status === "error")
+			throw new Error(result.message);
 	} catch (err) {
 		console.error(err);
 
@@ -150,17 +60,6 @@ export async function updateVoucher(
 	formData: FormData,
 ): Promise<initialState> {
 	try {
-		const supabase = await createSupabaseServer();
-
-		const {
-			data: { user },
-			error: authError,
-		} = await supabase.auth.getUser();
-
-		if (authError || !user) {
-			throw new Error(authError?.message ?? "Not signed in");
-		}
-
 		const voucher: VoucherUpdate = {
 			title: getRequiredString(formData, "title"),
 			code: getRequiredString(formData, "code"),
@@ -175,12 +74,13 @@ export async function updateVoucher(
 			max_discount: getOptionalNumber(formData, "max_discount"),
 		};
 
-		const { error } = await supabase
-			.from("voucher")
-			.update(voucher)
-			.eq("id", voucherId);
+		const result = await apiFetch(`voucher/${voucherId}`, {
+			method: "PATCH",
+			body: JSON.stringify(voucher),
+		});
 
-		if (error) throw new Error("Error updating voucher", { cause: error });
+		if (result.status === "fail" || result.status === "error")
+			throw new Error(result.message);
 
 		revalidatePath("/voucher");
 		revalidatePath("/dashboard");
@@ -198,21 +98,13 @@ export async function updateVoucher(
 	}
 }
 
-export async function deleteVoucher(voucherId: number | undefined) {
-	const supabase = await createSupabaseServer();
-	const {
-		data: { user },
-		error: authError,
-	} = await supabase.auth.getUser();
+export async function deleteVoucher(voucherId: string | undefined) {
+	const result = await apiFetch(`voucher/${voucherId}`, {
+		method: "DELETE",
+	});
 
-	if (authError || !user) {
-		throw new Error(authError?.message ?? "Not signed in");
-	}
-
-	const { error } = await supabase.from("voucher").delete().eq("id", voucherId);
-
-	if (error) {
-		console.error(error);
+	if (result.status === "fail" || result.status === "error") {
+		console.error(result.message);
 		throw new Error("Voucher could not be deleted");
 	}
 

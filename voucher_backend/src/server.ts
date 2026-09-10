@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import process from 'process';
-import app from './app.js';
+import mongoose from 'mongoose';
 
 dotenv.config({ path: `.env.local` });
+
+const { env } = await import('./config/env.js');
+const { default: app } = await import('./app.js');
 
 process.on('uncaughtException', (err: Error) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
@@ -11,15 +13,12 @@ process.on('uncaughtException', (err: Error) => {
   process.exit(1);
 });
 
-const DB = process.env.DATABASE_URI!.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD!,
-);
+const DB = env.DATABASE_URI.replace('<PASSWORD>', env.DATABASE_PASSWORD);
 
 mongoose.connect(DB).then(() => console.log('DB connection successful!'));
 
 // Start Server
-const port = process.env.PORT;
+const port = env.PORT ?? 3001;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });

@@ -19,6 +19,8 @@ const voucherSchema = new mongoose.Schema(
     discount_value: { type: Number, required: true },
     usage_limit: { type: Number, default: 0 },
     min_purchase: { type: Number, default: null },
+    max_discount: { type: Number, default: null },
+    expiry_date: { type: Date, required: true },
     status: {
       type: String,
       enum: ['active', 'redeemed', 'expired'],

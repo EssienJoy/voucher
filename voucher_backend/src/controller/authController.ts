@@ -1,16 +1,15 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import Business, { type BusinessDocument } from '../model/businessModel.js';
 import AppError from '../../utils/appError.js';
+import { env } from '../config/env.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import type { JwtPayload, Secret, SignOptions } from 'jsonwebtoken';
 import { promisify } from 'util';
 
 const signToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRES! as NonNullable<
-      SignOptions['expiresIn']
-    >,
+  return jwt.sign({ id }, env.JWT_SECRET, {
+    expiresIn: env.JWT_EXPIRES as NonNullable<SignOptions['expiresIn']>,
   });
 };
 
@@ -22,14 +21,23 @@ const createSendToken = (
 ) => {
   const token = signToken(user._id.toString());
 
+  // Cookie rule (browsers enforce this, it's not optional): a cookie marked
+  // "SameSite=None" is ONLY accepted by the browser if it is ALSO marked
+  // "Secure". If you set sameSite to 'none' but secure is false (which it
+  // is in local development, since we're on http:// not https://), the
+  // browser silently throws the cookie away — no error, it just never
+  // shows up. That was one reason the browser "wasn't getting the token".
+  // Fix: only use 'none' in production (where we're on https and secure
+  // is true); use 'lax' in development, which works fine over plain http.
+  const isProduction = process.env.NODE_ENV === 'production';
+
   res.cookie('jwt', token, {
     expires: new Date(
-      Date.now() +
-        Number(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 60 * 60 * 1000,
+      Date.now() + env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
-    httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true, // JS in the browser can't read this cookie (XSS protection)
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction, // must be true whenever sameSite is 'none'
   });
 
   user.password = null;
@@ -39,6 +47,15 @@ const createSendToken = (
     token,
     data: user,
   });
+};
+
+export const logout = (req: Request, res: Response) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({ status: 'success' });
 };
 
 export const protect = async (
@@ -66,7 +83,7 @@ export const protect = async (
     secretOrPublicKey: Secret,
   ) => Promise<JwtPayload>;
 
-  const decoded = await verifyToken(token, process.env.JWT_SECRET!);
+  const decoded = await verifyToken(token, env.JWT_SECRET);
 
   const currentUser = await Business.findById(decoded.id);
   if (!currentUser) {

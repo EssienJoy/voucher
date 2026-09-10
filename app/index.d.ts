@@ -1,7 +1,7 @@
 declare type Business = {
 	business_name: string | null;
 	email: string;
-	id: number;
+	id: string;
 	created_at: string;
 };
 
@@ -23,7 +23,7 @@ declare interface baseVoucher {
 }
 
 declare interface voucher extends baseVoucher {
-	id: number;
+	id: string;
 	business_id: string;
 	created_at: string;
 	redemption_count: number;
@@ -38,6 +38,8 @@ declare type VoucherInsert = baseVoucher & {
 
 declare type VoucherUpdate = Partial<baseVoucher>;
 
+// Still Supabase-backed (see NOTE on getVoucherByCode/redeemVoucher in
+// app/_lib/api/action.ts) — ids stay Postgres numbers, not Mongo ObjectIds.
 declare type VoucherResult = initialState & {
 	data: {
 		code: string;

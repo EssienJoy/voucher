@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import errorController from './controller/errorController.js';
+import globalErrorHandler from './controller/errorController.js';
 import businessRouter from './routes/businessRoutes.js';
 import voucherRouter from './routes/voucherRoutes.js';
 import AppError from '../utils/appError.js';
@@ -47,7 +47,6 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-console.log('NODE_ENV:', process.env.NODE_ENV);
 app.use(compression());
 
 if (process.env.NODE_ENV === 'development') {
@@ -63,5 +62,5 @@ app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
-app.use(errorController);
+app.use(globalErrorHandler);
 export default app;

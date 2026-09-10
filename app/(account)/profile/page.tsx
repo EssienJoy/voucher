@@ -7,6 +7,7 @@ export const metadata = {
 
 const ProfilePage = async () => {
 	const { business } = await getBusiness();
+	// console.log(business);
 
 	return (
 		<>

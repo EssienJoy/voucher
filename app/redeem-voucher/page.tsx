@@ -1,4 +1,4 @@
-import { Container, Footer, Header, VerifyVoucher } from "@/app/_components";
+import { Container, Footer, Header } from "@/app/_components";
 import { TicketCheck } from "lucide-react";
 
 const RedeemVoucherPage = async () => {
@@ -21,7 +21,7 @@ const RedeemVoucherPage = async () => {
 								</p>
 							</div>
 
-							<VerifyVoucher />
+							{/* <VerifyVoucher /> */}
 						</div>
 					</Container>
 				</section>
