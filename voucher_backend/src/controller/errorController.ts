@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express';
-import type AppError from '../../utils/appError.js';
+import type AppError from '../utils/appError.js';
 
 const sendErrorDev = (err: AppError, res: Response) => {
   res.status(err.statusCode).json({

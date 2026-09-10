@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import Business, { type BusinessDocument } from '../model/businessModel.js';
-import AppError from '../../utils/appError.js';
+import AppError from '../utils/appError.js';
 import { env } from '../config/env.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';

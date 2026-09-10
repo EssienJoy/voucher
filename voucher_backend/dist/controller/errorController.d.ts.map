@@ -1,0 +1,1 @@
+{"version":3,"file":"errorController.d.ts","sourceRoot":"","sources":["../../src/controller/errorController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,YAAY,EAAE,KAAK,OAAO,EAAE,KAAK,QAAQ,EAAE,MAAM,SAAS,CAAC;AACzE,OAAO,KAAK,QAAQ,MAAM,sBAAsB,CAAC;AAgCjD,QAAA,MAAM,kBAAkB,QACjB,QAAQ,OACR,OAAO,OACP,QAAQ,QACP,YAAY,SAanB,CAAC;eAEa,kBAAkB"}
