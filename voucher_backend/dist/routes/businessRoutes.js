@@ -11,5 +11,6 @@ businessRouter
     .route('/me')
     .get(getUser)
     .patch(restrictTo('user'), updateUser);
+businessRouter.get('/:id', getAllUsers);
 export default businessRouter;
 //# sourceMappingURL=businessRoutes.js.map
