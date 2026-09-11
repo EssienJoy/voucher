@@ -1,6 +1,10 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import Voucher from '../model/voucherModel.js';
 import mongoose from 'mongoose';
+import AppError from '../utils/appError.js';
+
+const VOUCHER_STATUSES = ['active', 'redeemed', 'expired'] as const;
+type VoucherStatus = (typeof VOUCHER_STATUSES)[number];
 
 export const createVoucher = async (
   req: Request,
@@ -30,10 +34,27 @@ export const getVoucher = async (
   next: NextFunction,
 ) => {
   try {
-    // Placeholder until auth is implemented — should come from req.user.businessId
     const businessId = new mongoose.Types.ObjectId(req.user?.id);
 
-    const vouchers = await Voucher.find({ business_id: businessId });
+    const { status } = req.query;
+
+    if (
+      status !== undefined &&
+      !VOUCHER_STATUSES.includes(status as VoucherStatus)
+    ) {
+      return next(
+        new AppError(
+          `Invalid status filter. Must be one of: ${VOUCHER_STATUSES.join(', ')}`,
+          400,
+        ),
+      );
+    }
+
+    const vouchers = await Voucher.find(
+      status
+        ? { business_id: businessId, status: status as VoucherStatus }
+        : { business_id: businessId },
+    );
 
     res.status(200).json({
       status: 'success',
@@ -51,7 +72,6 @@ export const updateVoucher = async (
   next: NextFunction,
 ) => {
   try {
-    // Placeholder until auth is implemented — should come from req.user.businessId
     const businessId = new mongoose.Types.ObjectId(req.user?.id);
 
     const voucher = await Voucher.findOneAndUpdate(
