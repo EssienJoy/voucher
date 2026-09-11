@@ -26,11 +26,8 @@
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		"voucher-frontend/.next/types/**/*.ts",
-		"voucher-frontend/.next/app/(info)/contact**/*.mts",
 		".next/types/**/*.ts",
-		".next/dev/types/**/*.ts",
-		"../voucher_backend/src/utils/apiFeatures.ts"
+		".next/dev/types/**/*.ts"
 	],
 	"exclude": ["node_modules"]
 }
