@@ -12,8 +12,25 @@ export const metadata = {
 	title: "Voucher",
 };
 
-const VoucherPage = async () => {
-	const { vouchers }: { vouchers: voucher[] | null } = await getVouchers();
+const filters = [
+	{ label: "All", status: undefined },
+	{ label: "Active", status: "active" },
+	{ label: "Redeemed", status: "redeemed" },
+	{ label: "Expired", status: "expired" },
+] as const;
+
+const VoucherPage = async ({
+	searchParams,
+}: {
+	searchParams: Promise<{ status?: string }>;
+}) => {
+	const { status } = await searchParams;
+	const activeStatus = filters.some((filter) => filter.status === status)
+		? (status as voucher["status"] | undefined)
+		: undefined;
+
+	const { vouchers }: { vouchers: voucher[] | null } =
+		await getVouchers(activeStatus);
 	return (
 		<>
 			<MobileHeader text='Vouchers' />
@@ -41,21 +58,22 @@ const VoucherPage = async () => {
 					<section>
 						<aside className='mb-8 overflow-x-auto'>
 							<div className='flex flex-wrap  gap-1 rounded-xl bg-white p-1.5'>
-								<button className='rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white'>
-									All
-								</button>
-
-								<button className='rounded-lg px-5 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-gray-100'>
-									Active
-								</button>
-
-								<button className='rounded-lg px-5 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-gray-100'>
-									Used
-								</button>
-
-								<button className='rounded-lg px-5 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-gray-100'>
-									Expired
-								</button>
+								{filters.map((filter) => (
+									<Link
+										key={filter.label}
+										href={
+											filter.status
+												? `/voucher?status=${filter.status}`
+												: "/voucher"
+										}
+										className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition ${
+											activeStatus === filter.status
+												? "bg-primary text-white"
+												: "text-text-secondary hover:bg-gray-100"
+										}`}>
+										{filter.label}
+									</Link>
+								))}
 							</div>
 						</aside>
 

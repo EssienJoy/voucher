@@ -23,10 +23,14 @@ export async function getBusiness(): Promise<{
 	};
 }
 
-export const getVouchers = async function (): Promise<{
+export const getVouchers = async function (
+	status?: voucher["status"],
+): Promise<{
 	vouchers: voucher[] | null;
 }> {
-	const result = await apiFetch("voucher");
+	const result = await apiFetch(
+		status ? `voucher?status=${status}` : "voucher",
+	);
 
 	if (result.status === "fail") throw new Error(result.message);
 
