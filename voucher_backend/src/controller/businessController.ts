@@ -7,7 +7,9 @@ export const getUser = async (
   next: NextFunction,
 ) => {
   try {
-    const business = await Business.findById(req.user?.id);
+    const business = await Business.findById(req.user?.id).select(
+      'business_name email createdAt -_id',
+    );
 
     res.status(200).json({
       status: 'success',
