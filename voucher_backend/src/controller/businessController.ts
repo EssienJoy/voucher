@@ -30,7 +30,7 @@ export const updateUser = async (
       req.user?.id,
       { business_name: req.body.business_name },
       { new: true, runValidators: true },
-    );
+    ).select('business_name email createdAt -_id');
 
     res.status(200).json({
       status: 'success',
