@@ -6,6 +6,7 @@ interface ErrorProps {
 }
 
 const Error = ({ error, reset }: ErrorProps) => {
+	console.error(error);
 	return (
 		<main className='flex min-h-[70vh] items-center justify-center px-6'>
 			<div className='w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm'>

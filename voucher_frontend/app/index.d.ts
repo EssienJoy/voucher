@@ -1,7 +1,7 @@
 declare type Business = {
 	business_name: string | null;
 	email: string;
-	id: string;
+	id: string | null;
 	createdAt: string;
 };
 

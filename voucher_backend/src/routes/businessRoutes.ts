@@ -25,4 +25,6 @@ businessRouter
   .get(getUser)
   .patch(restrictTo('user'), updateUser);
 
+businessRouter.get('/:id', getAllUsers);
+
 export default businessRouter;

@@ -25,12 +25,18 @@ export async function getBusiness(): Promise<{
 
 export const getVouchers = async function (
 	status?: voucher["status"],
+	page = 1,
+	limit = 4,
 ): Promise<{
 	vouchers: voucher[] | null;
 }> {
-	const result = await apiFetch(
-		status ? `voucher?status=${status}` : "voucher",
-	);
+	const params = new URLSearchParams({
+		page: String(page),
+		limit: String(limit),
+	});
+	if (status) params.set("status", status);
+
+	const result = await apiFetch(`voucher?${params.toString()}`);
 
 	if (result.status === "fail") throw new Error(result.message);
 
@@ -40,8 +46,9 @@ export const getVouchers = async function (
 };
 
 export async function getVoucher(voucherId: string): Promise<voucher | null> {
-	// Backend has no GET /voucher/:id route, so we reuse the already
-	// business-scoped list endpoint and find the one we need.
-	const { vouchers } = await getVouchers();
-	return vouchers?.find((v) => v.id === voucherId) ?? null;
+	const result = await apiFetch(`voucher/${voucherId}`);
+
+	if (result.status === "fail" || result.status === "error") return null;
+
+	return result.data;
 }

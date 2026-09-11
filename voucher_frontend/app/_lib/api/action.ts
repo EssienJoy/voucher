@@ -98,6 +98,31 @@ export async function updateVoucher(
 	}
 }
 
+export async function updateBusiness(
+	_previousState: initialState,
+	formData: FormData,
+): Promise<initialState> {
+	const business_name = getRequiredString(formData, "business_name");
+
+	const result = await apiFetch("user/me", {
+		method: "PATCH",
+		body: JSON.stringify({ business_name }),
+	});
+
+	if (result.status === "fail" || result.status === "error") {
+		return {
+			error: result.message,
+			success: null,
+		};
+	}
+
+	revalidatePath("/profile");
+	return {
+		error: null,
+		success: "Profile updated successfully",
+	};
+}
+
 export async function deleteVoucher(voucherId: string | undefined) {
 	const result = await apiFetch(`voucher/${voucherId}`, {
 		method: "DELETE",

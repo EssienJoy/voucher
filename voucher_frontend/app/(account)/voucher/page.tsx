@@ -12,25 +12,40 @@ export const metadata = {
 	title: "Voucher",
 };
 
-const filters = [
-	{ label: "All", status: undefined },
-	{ label: "Active", status: "active" },
-	{ label: "Redeemed", status: "redeemed" },
-	{ label: "Expired", status: "expired" },
-] as const;
-
 const VoucherPage = async ({
 	searchParams,
 }: {
-	searchParams: Promise<{ status?: string }>;
+	searchParams: Promise<{ status?: string; page?: string }>;
 }) => {
-	const { status } = await searchParams;
+	const filters = [
+		{ label: "All", status: undefined },
+		{ label: "Active", status: "active" },
+		{ label: "Redeemed", status: "redeemed" },
+		{ label: "Expired", status: "expired" },
+	] as const;
+
+	const PAGE_SIZE = 4;
+	const { status, page: rawPage } = await searchParams;
 	const activeStatus = filters.some((filter) => filter.status === status)
 		? (status as voucher["status"] | undefined)
 		: undefined;
+	const page = Math.max(1, Number(rawPage) || 1);
 
-	const { vouchers }: { vouchers: voucher[] | null } =
-		await getVouchers(activeStatus);
+	const { vouchers }: { vouchers: voucher[] | null } = await getVouchers(
+		activeStatus,
+		page,
+		PAGE_SIZE,
+	);
+
+	const hasPrevPage = page > 1;
+	const hasNextPage = (vouchers?.length ?? 0) === PAGE_SIZE;
+
+	const pageHref = (targetPage: number) => {
+		const params = new URLSearchParams({ page: String(targetPage) });
+		if (activeStatus) params.set("status", activeStatus);
+		return `/voucher?${params.toString()}`;
+	};
+
 	return (
 		<>
 			<MobileHeader text='Vouchers' />
@@ -202,6 +217,36 @@ const VoucherPage = async ({
 									)}
 								</ul>
 							</Suspense>
+						)}
+
+						{(hasPrevPage || hasNextPage) && (
+							<div className='mt-8 flex items-center justify-between gap-4'>
+								{hasPrevPage ? (
+									<Link
+										href={pageHref(page - 1)}
+										className='rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-text-primary shadow-sm transition hover:bg-gray-100'>
+										Previous
+									</Link>
+								) : (
+									<span className='rounded-lg px-5 py-2.5 text-sm font-semibold text-text-secondary/50'>
+										Previous
+									</span>
+								)}
+
+								<span className='text-sm text-text-secondary'>Page {page}</span>
+
+								{hasNextPage ? (
+									<Link
+										href={pageHref(page + 1)}
+										className='rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-text-primary shadow-sm transition hover:bg-gray-100'>
+										Next
+									</Link>
+								) : (
+									<span className='rounded-lg px-5 py-2.5 text-sm font-semibold text-text-secondary/50'>
+										Next
+									</span>
+								)}
+							</div>
 						)}
 					</section>
 				</Container>

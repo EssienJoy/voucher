@@ -11,7 +11,7 @@ const LogoutButton = () => {
 		<button
 			onClick={() => logout()}
 			type='button'
-			className=' mt-8 flex w-full items-center justify-center gap-2 rounded-xl border border-background px-5 py-3 font-semibold text-red-500 transition hover:bg-red-50'>
+			className=' mt-8 flex w-full items-center justify-center gap-2 rounded-xl border border-red-600 px-5 py-3 font-semibold text-red-500 transition hover:bg-red-50'>
 			<LogOut size={18} />
 			Log out
 		</button>

@@ -4,6 +4,7 @@ import { getVoucher } from "@/app/_lib/api/data-service";
 import VoucherForm from "@/app/_components/VoucherForm";
 import React from "react";
 import { notFound } from "next/navigation";
+import ArrowBack from "@/app/_components/ArrowBack";
 
 export const metadata = {
 	title: "Edit",
@@ -24,16 +25,14 @@ const page = async ({ params }: { params: Promise<{ voucherId: string }> }) => {
 
 			<section className='py-25'>
 				<Container>
-					<div className='mx-auto max-w-2xl'>
-						<div className='rounded-2xl bg-white p-2 md:p-8'>
-							<h1 className='text-2xl font-bold text-text-primary mb-7'>
+					<div className='mx-auto max-w-2xl rounded-2xl bg-white p-2 md:p-8'>
+						<header className='flex mb-7 items-center gap-5'>
+							<ArrowBack />
+							<h1 className='text-2xl font-bold text-text-primary '>
 								Edit voucher
 							</h1>
-							<VoucherForm
-								action={updateVoucherWithId}
-								defaultValues={voucher}
-							/>
-						</div>
+						</header>
+						<VoucherForm action={updateVoucherWithId} defaultValues={voucher} />
 					</div>
 				</Container>
 			</section>
