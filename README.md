@@ -2,61 +2,43 @@
 
 Digital discount vouchers for small businesses — create them, share a code with customers, and verify + redeem that code at the point of sale.
 
-Voucherly is a Next.js 16 / Supabase app built for businesses that hand out promo codes ("10% off your first order", "₦5,000 off orders over ₦10,000", etc.) and need a simple way to make sure a code is real, still active, and hasn't been used more times than allowed — without a spreadsheet.
+Voucherly is a two-app monorepo: a [Next.js 16](https://nextjs.org) frontend and an [Express](https://expressjs.com) + [MongoDB](https://www.mongodb.com) backend. It's built for businesses that hand out promo codes ("10% off your first order", "₦5,000 off orders over ₦10,000", etc.) and need a simple way to make sure a code is real, still active, and hasn't been used more times than allowed — without a spreadsheet.
+
+## Repo layout
+
+```
+voucher/
+├── voucher_frontend/   Next.js 16 app (UI, auth cookies, server actions)
+└── voucher_backend/    Express + MongoDB API (auth, business + voucher data)
+```
+
+Each app has its own `package.json`, `node_modules`, and env file — they're run and deployed independently.
+
+## Architecture
+
+The browser only ever talks to the Next.js app; Next.js talks to Express on the browser's behalf:
+
+```
+Browser → Next.js (voucher_frontend) → Express API (voucher_backend) → MongoDB
+```
+
+- **Auth is JWT-based.** Express issues a JWT on sign-up/login, in the JSON response body. Next.js server actions ([app/_lib/api/auth.ts](voucher_frontend/app/_lib/api/auth.ts)) grab that token and set it as their own `httpOnly` `jwt` cookie on the browser's Next.js domain — the browser never talks to Express directly, so `BACKEND_API_URL` never reaches client-side JS.
+- **Every server-side call to Express** goes through [`apiFetch`](voucher_frontend/app/_lib/api/http.ts), which reads that same `jwt` cookie and forwards it as `Authorization: Bearer <token>` — this is what Express's `protect` middleware checks on every business/voucher route.
+- **Route protection on the Next.js side** is enforced in [proxy.ts](voucher_frontend/proxy.ts) / [app/_lib/auth.ts](voucher_frontend/app/_lib/auth.ts) (Next 16's replacement for `middleware.ts`): any path not in the public list redirects to `/login` if there's no `jwt` cookie.
+
+> **Migration in progress:** this app originally ran on Supabase directly from Next.js. Auth and the authenticated voucher CRUD flow (create/edit/list/delete, business profile) have been migrated to the Express/MongoDB backend. The **public verify & redeem flow** (`/redeem-voucher`) hasn't been ported yet — its UI (`VerifyVoucher`) is currently commented out in [app/redeem-voucher/page.tsx](voucher_frontend/app/redeem-voucher/page.tsx) pending an equivalent public "look up voucher by code" endpoint on the Express side. The frontend's `@supabase/*` packages are still installed but no longer used by any app code — see [Roadmap](#roadmap).
 
 ## What it does
 
 - **Create & manage vouchers** — a title, a redeemable code, an optional description, a discount that's either a percentage or a fixed amount, an optional minimum purchase and max discount cap, a usage limit, and an expiry date.
-- **Verify & redeem, publicly** — anyone with a code (a customer, or staff at checkout) can look it up at `/redeem-voucher` to confirm it's still valid, then redeem it in one click.
-- **Enforced redemption limits** — every redemption is recorded server-side, so a voucher can't be redeemed past its `usage_limit` or after its `expiry_date`, no matter what the client sends.
+- **Enforced redemption limits** — redemptions are recorded server-side (`Redemption` model) against a voucher's `usage_limit` and `expiry_date`.
 - **Per-business dashboard** — at-a-glance stats (total / active / expired vouchers) plus a feed of recent voucher activity.
-- **Multi-tenant by account** — sign up with email/password (Supabase Auth) and each account gets its own `business` record; you only ever see your own vouchers.
+- **Multi-tenant by account** — sign up with email/password, JWT-authenticated; each account is a `Business` document and only ever sees its own vouchers.
+- **Roles** — every business has a `role` of `user` or `admin`; admin-only actions are gated with Express's `restrictTo` middleware.
 - **Admin overview scaffold** — `/admin/dashboard` is a first pass at a platform-wide view (currently mock data — see [Roadmap](#roadmap)).
+- **Verify & redeem a code publicly** — `/redeem-voucher` is the intended public page for anyone to check a code and redeem it; currently disabled pending backend support (see [Migration in progress](#architecture) above).
 
-## Usage
-
-The whole flow is: **create a voucher → share the code → someone verifies and redeems it.**
-
-**1. Create a voucher** (from `/voucher/create-voucher`, authenticated) — via [VoucherForm.tsx](app/_components/VoucherForm.tsx), which calls [`createVoucher`](app/_lib/api/action.ts):
-
-| Field | Example |
-| --- | --- |
-| Title | `Welcome Discount` |
-| Code | `WELCOME10` |
-| Discount type / value | `percentage` / `10` |
-| Min. purchase | `10000` *(optional)* |
-| Max. discount | `5000` *(optional)* |
-| Expiry date | `2026-12-31` |
-| Usage limit | `100` *(optional)* |
-
-**2. Share the code** — `WELCOME10`, however you like (receipt, SMS, social post).
-
-**3. Verify it** — anyone visits `/redeem-voucher`, enters the code, and [`getVoucherByCode`](app/_lib/api/action.ts) looks it up:
-
-```jsonc
-// state.data returned to VerifyVoucher.tsx
-{
-  "code": "welcome10",
-  "status": "active",
-  "expiry_date": "2026-12-31",
-  "discount_type": "percentage",
-  "discount_value": 10,
-  "id": 42,
-  "business_id": "8f1b6c2e-2f3a-4a11-9d7e-6b1c2d3e4f5a"
-}
-```
-
-If the code doesn't exist or has expired, `error` is set instead (e.g. `"Voucher code does not exist."`) and nothing is redeemed.
-
-**4. Redeem it** — clicking **Redeem Voucher** on the result card calls [`redeemVoucher`](app/_lib/api/action.ts), which re-checks the expiry and usage limit, inserts a row into `redemption`, and returns:
-
-```json
-{ "error": null, "success": "Voucher redeemed successfully.", "data": null }
-```
-
-For the full create/edit/delete flow (including validation and the Supabase queries behind it), see [app/_lib/api/action.ts](app/_lib/api/action.ts) and [app/_lib/api/data-service.ts](app/_lib/api/data-service.ts).
-
-### Site map
+### Site map (frontend)
 
 | Route | Access | Purpose |
 | --- | --- | --- |
@@ -66,37 +48,87 @@ For the full create/edit/delete flow (including validation and the Supabase quer
 | `/voucher` | Account | List all vouchers for the business |
 | `/voucher/create-voucher` | Account | Create a voucher |
 | `/voucher/edit-voucher/[voucherId]` | Account | Edit a voucher |
-| `/profile` | Account | Business profile (read-only) |
-| `/redeem-voucher` | Public | Verify & redeem a voucher code |
+| `/profile` | Account | Business profile |
+| `/redeem-voucher` | Public | Verify & redeem a voucher code — *UI currently disabled, see above* |
 | `/about`, `/contact`, `/privacy-terms` | Public | Info pages |
 | `/admin/dashboard` | — | Platform-wide overview (UI scaffold, mock data for now) |
 
-Route access is enforced in [app/_lib/supabase/proxy.ts](app/_lib/supabase/proxy.ts) (Next 16's replacement for `middleware.ts`): anything not in the public path list redirects to `/login`.
+### API (backend)
+
+Base path: `/api/v1`. All routes below `businessRouter.use(protect)` / `voucherRouter.use(protect)` require a valid JWT (cookie or `Authorization: Bearer` header).
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| POST | `/user/sign-up` | Public | Create a business account, returns a JWT |
+| POST | `/user/login` | Public | Log in, returns a JWT |
+| POST | `/user/logout` | Public | Clear the server-side cookie |
+| GET | `/user` | Protected | List all businesses (admin-facing) |
+| GET | `/user/me` | Protected | Current business's profile |
+| PATCH | `/user/me` | Protected, `user` role | Update `business_name` |
+| POST | `/voucher` | Protected | Create a voucher for the current business |
+| GET | `/voucher` | Protected | List the current business's vouchers |
+| PATCH | `/voucher/:id` | Protected | Update a voucher (must belong to the current business) |
+| DELETE | `/voucher/:id` | Protected | Delete a voucher (must belong to the current business) |
+
+There's no public "look up voucher by code" route yet — that's the missing piece behind `/redeem-voucher` (see [Roadmap](#roadmap)).
 
 ## Tech stack
 
-[Next.js 16](https://nextjs.org) (App Router, Server Actions) · [React 19](https://react.dev) · [Supabase](https://supabase.com) (`@supabase/ssr` + `@supabase/supabase-js`) · [Tailwind CSS 4](https://tailwindcss.com) · TypeScript · [lucide-react](https://lucide.dev)
+**Frontend** ([voucher_frontend/](voucher_frontend)) — [Next.js 16](https://nextjs.org) (App Router, Server Actions) · [React 19](https://react.dev) · [Tailwind CSS 4](https://tailwindcss.com) · TypeScript · [lucide-react](https://lucide.dev)
 
-> This repo runs a pre-release Next.js version with API changes beyond the public docs — see [AGENTS.md](AGENTS.md) before touching framework-level code.
+**Backend** ([voucher_backend/](voucher_backend)) — [Express 5](https://expressjs.com) · [Mongoose](https://mongoosejs.com)/MongoDB · [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) + [bcryptjs](https://github.com/dcodeIO/bcrypt.js) for auth · [helmet](https://helmetjs.github.io), [cors](https://github.com/expressjs/cors), [express-rate-limit](https://github.com/express-rate-limit/express-rate-limit), [compression](https://github.com/expressjs/compression) for hardening · TypeScript
+
+> The frontend runs a pre-release Next.js version with API changes beyond the public docs — see [voucher_frontend/AGENTS.md](voucher_frontend/AGENTS.md) before touching framework-level code.
 
 ## Getting started
 
-**Prerequisites:** Node 20+ and a [Supabase](https://supabase.com) project with `business`, `voucher`, and `redemption` tables matching the shapes in [app/index.d.ts](app/index.d.ts) (there's no migrations folder in this repo yet — schema currently lives only in Supabase).
+**Prerequisites:** Node 20+ and a MongoDB database (local or [Atlas](https://www.mongodb.com/atlas)).
 
 ```bash
 git clone https://github.com/EssienJoy/voucher.git
 cd voucher
+```
+
+### 1. Backend
+
+```bash
+cd voucher_backend
 npm install
 ```
 
-Create `.env.local` with your Supabase project's API credentials:
+Create `.env.local` (values are yours — do not commit this file):
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+DATABASE_URI=mongodb+srv://<username>:<PASSWORD>@your-cluster.mongodb.net/voucherly
+DATABASE_PASSWORD=your-db-password
+JWT_SECRET=a-long-random-string
+JWT_EXPIRES=90d
+JWT_COOKIE_EXPIRES_IN=90
+PORT=3001
 ```
 
-Then run the dev server:
+`DATABASE_URI` should contain the literal placeholder `<PASSWORD>` — it's substituted at runtime with `DATABASE_PASSWORD` (see [src/server.ts](voucher_backend/src/server.ts)).
+
+```bash
+npm run dev
+```
+
+The API starts on `http://localhost:3001` (or your `PORT`), mounted under `/api/v1`.
+
+### 2. Frontend
+
+```bash
+cd voucher_frontend
+npm install
+```
+
+Create `.env.local`:
+
+```bash
+BACKEND_API_URL=http://localhost:3001/api/v1/
+```
+
+Keep the trailing slash — the frontend builds request URLs by concatenating this with paths like `voucher` and `user/login` (see [app/_lib/api/http.ts](voucher_frontend/app/_lib/api/http.ts)).
 
 ```bash
 npm run dev
@@ -104,30 +136,41 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000). Sign up at `/signup` to create a business account, then create your first voucher from the dashboard.
 
-Other scripts: `npm run build`, `npm run start`, `npm run lint`.
+### Scripts
 
-## Support
+Both apps expose the same script names:
 
-For bugs or questions, open an issue on the [GitHub issue tracker](https://github.com/EssienJoy/voucher/issues).
+| Script | Frontend | Backend |
+| --- | --- | --- |
+| `npm run dev` | `next dev` | `tsx watch src/server.ts` |
+| `npm run build` | `next build` | `tsc` (compiles `src/` → `dist/`) |
+| `npm run start` | `next start` | runs the compiled `dist/server.js` |
+| `npm run lint` | `eslint` | — |
+
+## Deployment
+
+- **Frontend** deploys cleanly to [Vercel](https://vercel.com) as a standard Next.js app. Set `BACKEND_API_URL` (pointing at the deployed backend, with trailing slash) as a Vercel environment variable — not `NEXT_PUBLIC_`, since it must stay server-only.
+- **Backend** is a plain long-running Express server (`app.listen(...)` in [src/server.ts](voucher_backend/src/server.ts)) — it does **not** run on Vercel's serverless model. Deploy it to a host built for persistent Node processes instead (e.g. [Render](https://render.com), [Railway](https://railway.app), [Fly.io](https://fly.io)). On a generic Node host, set:
+  - **Build Command:** `npm install && npm run build`
+  - **Start Command:** `npm run start`
+  - Environment variables: `DATABASE_URI`, `DATABASE_PASSWORD`, `JWT_SECRET`, `JWT_EXPIRES`, `JWT_COOKIE_EXPIRES_IN`, `PORT`, `NODE_ENV=production`.
 
 ## Roadmap
 
+- Add a public "look up voucher by code" endpoint on the backend and re-enable `VerifyVoucher` on `/redeem-voucher`
+- Remove the unused `@supabase/ssr` / `@supabase/supabase-js` packages from the frontend now that auth and voucher CRUD are fully on the Express/MongoDB backend
 - Wire up `/admin/dashboard` to real platform data (currently static/mock numbers)
-- Finish "Continue with Google" sign-in (the button exists in the UI but isn't wired up yet)
+- Finish "Continue with Google" sign-in (the button exists in the UI, and `Business` already has `provider_type`/`providers` fields, but it isn't wired up yet)
 - Voucher analytics / redemption history per voucher
-- Checked-in schema (SQL migrations) instead of manually-configured Supabase tables
+- Checked-in schema/migrations for MongoDB instead of implicit Mongoose schemas
 - Email or SMS notification when a voucher is redeemed
+- Automated test suite for both apps
 
 ## Contributing
 
-Contributions are welcome via pull request. To get set up:
+Contributions are welcome via pull request. To get set up, follow [Getting started](#getting-started) for both apps.
 
-1. Fork and clone the repo
-2. `npm install`
-3. Set up `.env.local` as described in [Getting started](#getting-started)
-4. `npm run dev` to run locally, `npm run lint` before opening a PR
-
-There's no automated test suite yet, so manually verify the create → verify → redeem flow for any change that touches vouchers. Keep commit messages short and descriptive of the change.
+There's no automated test suite yet, so manually verify the affected flow for any change — especially auth (sign-up/login/logout) and voucher create/edit/delete, since those cross the frontend/backend boundary. Keep commit messages short and descriptive of the change.
 
 ## Authors and acknowledgment
 
@@ -139,4 +182,4 @@ No license has been chosen for this project yet. All rights reserved until one i
 
 ## Project status
 
-Actively developed — the core create / share / verify / redeem flow is working. The admin panel and Google sign-in are in-progress scaffolding (see [Roadmap](#roadmap)).
+Actively developed, mid-migration from Supabase to a custom Express/MongoDB backend. Auth and the authenticated voucher CRUD flow work end-to-end; the public verify/redeem flow, the admin panel, and Google sign-in are in-progress (see [Roadmap](#roadmap)).
