@@ -5,8 +5,8 @@ dotenv.config({ path: `.env.local` });
 const { env } = await import('./config/env.js');
 const { default: app } = await import('./app.js');
 process.on('uncaughtException', (err) => {
-    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
+    console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.error(err.name, err.message);
     process.exit(1);
 });
 const DB = env.DATABASE_URI.replace('<PASSWORD>', env.DATABASE_PASSWORD);
@@ -17,8 +17,8 @@ const server = app.listen(port, () => {
     console.log(`App running on port ${port}...`);
 });
 process.on('unhandledRejection', (err) => {
-    console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
+    console.error('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.error(err.name, err.message);
     server.close(() => {
         process.exit(1);
     });

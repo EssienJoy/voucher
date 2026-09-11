@@ -27,11 +27,11 @@ const DashboardPage = async () => {
 	const expired = vouchers?.filter((v) => v.status === "expired").length ?? 0;
 
 	const { business } = businessResult;
-	console.log(business);
+	// console.log(business);
 
 	const dashboard = [
 		{
-			title: "Total Vouchers",
+			title: "Vouchers",
 			num: vouchers?.length,
 		},
 		{
@@ -68,7 +68,7 @@ const DashboardPage = async () => {
 								<div
 									key={data.title}
 									className={`
-								${i + 1 === 3 ? "col-span-2" : ""}
+								${i + 1 === 3 ? "col-span-2 sm:col-span-1" : ""}
 								rounded-2xl bg-white p-4`}>
 									<p className='text-sm font-medium text-text-secondary'>
 										{data.title}
