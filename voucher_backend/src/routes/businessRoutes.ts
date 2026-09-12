@@ -5,6 +5,7 @@ import {
   logout,
   protect,
   restrictTo,
+  signInWithGoogle,
 } from '../controller/authController.js';
 import {
   getUser,
@@ -17,13 +18,11 @@ const businessRouter = express.Router();
 businessRouter.post('/sign-up', signUp);
 businessRouter.post('/login', login);
 businessRouter.post('/logout', logout);
+businessRouter.get('/google', signInWithGoogle);
 
 businessRouter.use(protect);
 businessRouter.get('/', getAllUsers);
-businessRouter
-  .route('/me')
-  .get(getUser)
-  .patch(restrictTo('user'), updateUser);
+businessRouter.route('/me').get(getUser).patch(restrictTo('user'), updateUser);
 
 businessRouter.get('/:id', getAllUsers);
 

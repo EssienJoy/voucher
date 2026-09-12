@@ -37,6 +37,60 @@ import { redirect } from "next/navigation";
 
 const BACKEND_URL = process.env.BACKEND_API_URL;
 
+export async function signInWithGoogle() {
+	const clientId = process.env.GOOGLE_CLIENT_ID;
+	const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+	if (!clientId || !redirectUri) return null;
+
+	const params = new URLSearchParams({
+		client_id: clientId,
+		redirect_uri: redirectUri,
+		response_type: "code",
+		scope: "openid email profile",
+		prompt: "select_account",
+	});
+
+	return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+}
+
+export async function handleGoogleCallback(code: string): Promise<initialState> {
+	try {
+		const url = new URL(`${BACKEND_URL}user/google`);
+		url.searchParams.set("code", code);
+		url.searchParams.set(
+			"redirect_uri",
+			process.env.GOOGLE_REDIRECT_URI ?? "",
+		);
+
+		const response = await fetch(url);
+		const result = await response.json();
+
+		if (result.status === "fail" || result.status === "error") {
+			return {
+				error: result.message,
+				success: null,
+			};
+		}
+
+		const cookieStore = await cookies();
+		cookieStore.set("jwt", result.token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "lax",
+			path: "/",
+			maxAge: 60 * 60 * 24 * 90,
+		});
+	} catch (err) {
+		console.error(err);
+		return {
+			error: err instanceof Error ? err.message : "Unknown error",
+			success: null,
+		};
+	}
+
+	redirect("/dashboard");
+}
+
 export async function login(
 	_prevState: initialState,
 	formData: FormData,

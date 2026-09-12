@@ -22,3 +22,4 @@ export { default as DashboardStatsSkeleton } from "./DashboardStatsSkeleton";
 export { default as DashboardVoucherSkeleton } from "./DashboardVoucherSkeleton";
 export { default } from "./MobileFooter";
 export { default as UpdateUser } from "./UpdateUser";
+export { default as SigninWithGoogle } from "./SigninWithGoogle";

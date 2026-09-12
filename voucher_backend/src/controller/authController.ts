@@ -49,6 +49,94 @@ const createSendToken = (
   });
 };
 
+export const signInWithGoogle = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { code, redirect_uri } = req.query;
+
+    if (typeof code !== 'string' || !code) {
+      return next(new AppError('Missing Google authorization code', 400));
+    }
+    if (typeof redirect_uri !== 'string' || !redirect_uri) {
+      return next(new AppError('Missing redirect_uri', 400));
+    }
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+      return next(
+        new AppError('Google OAuth is not configured on this server', 500),
+      );
+    }
+
+    const tokenParams = new URLSearchParams({
+      code,
+      client_id: env.GOOGLE_CLIENT_ID,
+      client_secret: env.GOOGLE_CLIENT_SECRET,
+      redirect_uri,
+      grant_type: 'authorization_code',
+    });
+
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: tokenParams,
+    });
+
+    if (!tokenResponse.ok) {
+      return next(new AppError('Google token exchange failed', 401));
+    }
+
+    const { access_token } = (await tokenResponse.json()) as {
+      access_token: string;
+    };
+
+    const userInfoResponse = await fetch(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      { headers: { Authorization: `Bearer ${access_token}` } },
+    );
+
+    if (!userInfoResponse.ok) {
+      return next(new AppError('Failed to fetch Google profile', 401));
+    }
+
+    const profile = (await userInfoResponse.json()) as {
+      sub: string;
+      email: string;
+      name?: string;
+    };
+
+    let business = await Business.findOne({ google_id: profile.sub });
+
+    if (!business) {
+      business = await Business.findOne({ email: profile.email });
+
+      if (business) {
+        business.google_id = profile.sub;
+        business.provider_type = 'google';
+        business.providers = [
+          ...new Set([...(business.providers ?? []), 'google']),
+        ];
+      } else {
+        business = await Business.create({
+          email: profile.email,
+          business_name: profile.name ?? null,
+          google_id: profile.sub,
+          provider_type: 'google',
+          providers: ['google'],
+        });
+      }
+    }
+
+    business.last_sign_in_at = new Date();
+    await business.save();
+
+    createSendToken(business, 200, req, res);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const logout = (req: Request, res: Response) => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),

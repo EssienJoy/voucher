@@ -1,4 +1,4 @@
-import { LoginForm, Logo } from "@/app/_components";
+import { LoginForm, Logo, SigninWithGoogle } from "@/app/_components";
 import Image from "next/image";
 import Link from "next/link";
 import voucher from "@/public/voucher.jpg";
@@ -33,23 +33,7 @@ const Login = () => {
 					<div className='h-px flex-1 bg-gray-200' />
 				</div>
 
-				<button
-					type='button'
-					className='
-							flex w-full items-center justify-center
-							gap-3 rounded-xl border border-gray-200
-							bg-white px-5 py-3.5
-							font-semibold text-text-primary
-							transition hover:bg-gray-50
-						'>
-					<Image
-						src='https://authjs.dev/img/providers/google.svg'
-						alt='Google logo'
-						height='24'
-						width='24'
-					/>
-					Continue with Google
-				</button>
+				<SigninWithGoogle />
 
 				<p className='my-7 text-center text-sm text-text-secondary'>
 					Don&apos;t have an account?{" "}
