@@ -12,7 +12,7 @@ import voucherRouter from './routes/voucherRoutes.js';
 import AppError from './utils/appError.js';
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://voucher-ashy.vercel.app/'],
+    origin: ['http://localhost:3000', 'https://voucherly-three.vercel.app'],
     credentials: true,
 }));
 app.use(helmet({

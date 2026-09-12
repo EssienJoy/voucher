@@ -16,7 +16,7 @@ const app: Express = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://voucher-ashy.vercel.app/'],
+    origin: ['http://localhost:3000', 'https://voucherly-three.vercel.app'],
     credentials: true,
   }),
 );
