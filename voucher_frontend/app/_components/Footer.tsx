@@ -4,12 +4,12 @@ import Link from "next/link";
 const Footer = () => {
 	return (
 		<footer className='bg-[#13013D] py-12 text-white'>
-			<Container>
+			<Container className="max-w-none px-20">
 				<div className='grid gap-10 md:grid-cols-3'>
 					<div className='md:col-span-2'>
 						<h2 className='text-2xl font-bold'>Voucherly</h2>
 
-						<p className='mt-4 max-w-md text-sm leading-6 text-[#AEA9EF]'>
+						<p className='mt-4 max-w-md text-sm leading-6 text-accent'>
 							A simple voucher management platform that helps businesses create,
 							manage, validate, and track their vouchers with ease.
 						</p>

@@ -40,7 +40,7 @@ const HowItWorks = () => {
 	];
 
 	return (
-		<Container>
+		<Container className="max-w-none">
 			{/* How it works */}
 			<section id='how-it-works'>
 				<div className='mx-auto max-w-2xl text-center'>

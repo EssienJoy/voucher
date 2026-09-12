@@ -1,7 +1,9 @@
-import React, { ReactNode } from "react";
+import { cn } from "../_lib/utils";
 
-const Container = ({ children }: { children: ReactNode }) => {
-	return <div className='px-3 max-w-7xl'>{children}</div>;
+type ContainerProps = React.ComponentProps<"div">;
+
+const Container = ({ className, ...props }: ContainerProps) => {
+  return <div className={cn("px-3 max-w-7xl", className)} {...props} />;
 };
 
 export default Container;
