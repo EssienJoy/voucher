@@ -13,7 +13,6 @@ export const env = {
     JWT_COOKIE_EXPIRES_IN: Number(requireEnv('JWT_COOKIE_EXPIRES_IN')),
     GOOGLE_CLIENT_ID: requireEnv('GOOGLE_CLIENT_ID'),
     GOOGLE_CLIENT_SECRET: requireEnv('GOOGLE_CLIENT_SECRET'),
-    GOOGLE_REDIRECT_URI: requireEnv('GOOGLE_REDIRECT_URI'),
     PORT: requireEnv('PORT'),
     NODE_ENV: requireEnv('NODE_ENV'),
 };

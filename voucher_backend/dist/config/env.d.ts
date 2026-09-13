@@ -6,7 +6,6 @@ export declare const env: {
     JWT_COOKIE_EXPIRES_IN: number;
     GOOGLE_CLIENT_ID: string;
     GOOGLE_CLIENT_SECRET: string;
-    GOOGLE_REDIRECT_URI: string;
     PORT: string;
     NODE_ENV: string;
 };
