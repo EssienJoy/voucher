@@ -12,14 +12,6 @@ const signToken = (id) => {
 };
 const createSendToken = (user, statusCode, req, res) => {
     const token = signToken(user._id.toString());
-    // Cookie rule (browsers enforce this, it's not optional): a cookie marked
-    // "SameSite=None" is ONLY accepted by the browser if it is ALSO marked
-    // "Secure". If you set sameSite to 'none' but secure is false (which it
-    // is in local development, since we're on http:// not https://), the
-    // browser silently throws the cookie away — no error, it just never
-    // shows up. That was one reason the browser "wasn't getting the token".
-    // Fix: only use 'none' in production (where we're on https and secure
-    // is true); use 'lax' in development, which works fine over plain http.
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('jwt', token, {
         expires: new Date(Date.now() + env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -36,6 +28,7 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 export const signInWithGoogle = async (req, res, next) => {
     try {
+        // console.log(req.query);
         const { code, redirect_uri } = req.query;
         if (typeof code !== 'string' || !code) {
             return next(new AppError('Missing Google authorization code', 400));
@@ -80,7 +73,8 @@ export const signInWithGoogle = async (req, res, next) => {
             else {
                 business = await Business.create({
                     email: profile.email,
-                    business_name: profile.name ?? null,
+                    verified: true,
+                    // business_name: profile.name ?? null,
                     google_id: profile.sub,
                     provider_type: 'google',
                     providers: ['google'],

@@ -40,7 +40,8 @@ const BACKEND_URL = process.env.BACKEND_API_URL;
 export async function signInWithGoogle() {
 	const clientId = process.env.GOOGLE_CLIENT_ID;
 	const redirectUri = process.env.GOOGLE_REDIRECT_URI;
-	if (!clientId || !redirectUri) return null;
+	if (!clientId || !redirectUri)
+		throw new Error("Google client ID or redirect URI not available.");
 
 	const params = new URLSearchParams({
 		client_id: clientId,
@@ -53,14 +54,13 @@ export async function signInWithGoogle() {
 	return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 }
 
-export async function handleGoogleCallback(code: string): Promise<initialState> {
+export async function handleGoogleCallback(
+	code: string,
+): Promise<initialState> {
 	try {
 		const url = new URL(`${BACKEND_URL}user/google`);
 		url.searchParams.set("code", code);
-		url.searchParams.set(
-			"redirect_uri",
-			process.env.GOOGLE_REDIRECT_URI ?? "",
-		);
+		url.searchParams.set("redirect_uri", process.env.GOOGLE_REDIRECT_URI ?? "");
 
 		const response = await fetch(url);
 		const result = await response.json();

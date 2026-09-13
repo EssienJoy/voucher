@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-// import path from 'path';
+import { env } from './config/env.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import globalErrorHandler from './controller/errorController.js';
@@ -18,9 +18,8 @@ app.use(cors({
 app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
-// app.use(express.static(path.join(__dirname, 'public')));
-if (process.env.NODE_ENV === 'development') {
-    //logs information about incoming requests
+//logs information about incoming requests
+if (env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 const limiter = rateLimit({
@@ -34,10 +33,6 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 app.use(compression());
-if (process.env.NODE_ENV === 'development') {
-    //logs information about incoming requests
-    app.use(morgan('dev'));
-}
 app.use(express.static('public'));
 app.use('/api/v1/user', businessRouter);
 app.use('/api/v1/voucher', voucherRouter);
