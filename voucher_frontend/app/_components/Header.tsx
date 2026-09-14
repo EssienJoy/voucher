@@ -6,7 +6,7 @@ import NextLink from "next/link";
 const Header = () => {
 	return (
 		<header className='bg-[#13013D] py-4 text-white'>
-			<Container>
+			<Container className="px-20 max-w-none">
 				<div className='flex items-center justify-between'>
 					<NextLink href='/'>
 						<Logo />
