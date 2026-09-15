@@ -18,6 +18,8 @@ const VoucherForm = ({
 	});
 
 	const isEditing = Boolean(defaultValues);
+	const isLocked =
+		defaultValues?.status === "expired" || defaultValues?.status === "redeemed";
 
 	return (
 		<form action={submitAction} className=''>
@@ -149,7 +151,7 @@ const VoucherForm = ({
 
 				<button
 					type='submit'
-					disabled={isPending}
+					disabled={isPending || isLocked}
 					className='rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90'>
 					{isPending
 						? isEditing
@@ -160,6 +162,11 @@ const VoucherForm = ({
 							: "Create Voucher"}
 				</button>
 			</div>
+			{isLocked && (
+				<p className='text-red-500 text-xs'>
+					Cannot edit a voucher that is already {defaultValues?.status}.
+				</p>
+			)}
 			{state.error && <p className='text-red-500'>{state.error}</p>}
 			{state.success && <p className='text-green-600'>{state.success}</p>}
 		</form>

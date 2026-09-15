@@ -11,6 +11,7 @@ import {
   getUser,
   getAllUsers,
   updateUser,
+  regenerateApiKey,
 } from '../controller/businessController.js';
 
 const businessRouter = express.Router();
@@ -23,6 +24,7 @@ businessRouter.get('/google', signInWithGoogle);
 businessRouter.use(protect);
 businessRouter.get('/', getAllUsers);
 businessRouter.route('/me').get(getUser).patch(restrictTo('user'), updateUser);
+businessRouter.post('/me/api-key', regenerateApiKey);
 
 businessRouter.get('/:id', getAllUsers);
 

@@ -8,12 +8,13 @@ const NotFound = () => {
 		<main className='min-h-dvh flex items-center justify-center px-4'>
 			<Container>
 				<div className='mx-auto max-w-md text-center'>
-					{/* Icon */}
-					<div className='mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
-						<Ticket size={32} />
-					</div>
+					<header className='flex items-center '>
+						<ArrowBack />
+						<div className='mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
+							<Ticket size={32} />
+						</div>
+					</header>
 
-					{/* Error */}
 					<p className='mt-8 text-7xl font-bold text-primary'>404</p>
 
 					<h1 className='mt-4 text-2xl font-bold'>Page not found</h1>
@@ -23,14 +24,12 @@ const NotFound = () => {
 						may have been moved or no longer exists.
 					</p>
 
-					{/* Action */}
 					<Link
 						href='/'
 						className='mx-auto mt-8 flex w-fit items-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-white transition hover:opacity-90'>
 						<ArrowLeft size={18} />
 						Back to home
 					</Link>
-					<ArrowBack />
 				</div>
 			</Container>
 		</main>

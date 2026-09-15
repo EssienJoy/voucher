@@ -1,7 +1,5 @@
 import { Container } from "@/app/_components";
 
-import ArrowBack from "./ArrowBack";
-
 const Header = ({ text }: { text: string }) => {
 	return (
 		<header
@@ -16,11 +14,7 @@ const Header = ({ text }: { text: string }) => {
 				
 			'>
 			<Container>
-				<div className='relative flex h-10 items-center justify-center'>
-					<ArrowBack />
-
-					<h1 className='text-xl font-bold '>{text}</h1>
-				</div>
+				<h1 className='text-xl text-center font-bold '>{text}</h1>
 			</Container>
 		</header>
 	);

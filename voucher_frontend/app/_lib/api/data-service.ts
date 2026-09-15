@@ -1,14 +1,3 @@
-// These functions run as Server Components (e.g. dashboard/voucher pages
-// render on the Next.js server and call these directly). Because of that,
-// `credentials: "include"` on a plain fetch() here would do NOTHING — that
-// option only matters when a BROWSER makes the request, telling it to
-// attach cookies. There is no browser involved in a server-to-server call.
-//
-// apiFetch (in http.ts) is what actually makes auth work here: it reads
-// the "jwt" cookie the browser sent along with the page request, and
-// attaches it to the request to Express as an Authorization header, which
-// the `protect` middleware checks. See http.ts and auth.ts for the full
-// picture of how that cookie got there in the first place.
 import { apiFetch } from "./http";
 
 export async function getBusiness(): Promise<{

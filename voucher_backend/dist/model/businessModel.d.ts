@@ -17,6 +17,8 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -31,6 +33,8 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -55,6 +59,8 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -77,6 +83,8 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -97,6 +105,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -113,6 +123,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -137,6 +149,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -165,6 +179,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -179,6 +195,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -203,6 +221,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -225,6 +245,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
@@ -245,6 +267,8 @@ declare const Business: mongoose.Model<{
     providers: string[];
     confirmPassword?: string | null;
     verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;

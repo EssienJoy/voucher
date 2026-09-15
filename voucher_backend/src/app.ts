@@ -10,10 +10,13 @@ import cookieParser from 'cookie-parser';
 import globalErrorHandler from './controller/errorController.js';
 import businessRouter from './routes/businessRoutes.js';
 import voucherRouter from './routes/voucherRoutes.js';
+import redeemRouter from './routes/redeemRoutes.js';
+import publicApiRouter from './routes/publicApiRoutes.js';
 import AppError from './utils/appError.js';
 
 const app: Express = express();
 
+// Frontend urls allowed to communicate to the server.
 app.use(
   cors({
     origin: ['http://localhost:3000', 'https://voucherly-three.vercel.app'],
@@ -32,6 +35,7 @@ if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Limits spam requests
 const limiter = rateLimit({
   max: 1000,
   windowMs: 60 * 60 * 1000,
@@ -44,12 +48,14 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
-
 app.use(compression());
-
 app.use(express.static('public'));
+
+//Routes
 app.use('/api/v1/user', businessRouter);
 app.use('/api/v1/voucher', voucherRouter);
+app.use('/api/v1/redeem', redeemRouter);
+app.use('/api/v1/public', publicApiRouter);
 
 app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

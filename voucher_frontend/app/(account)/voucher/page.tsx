@@ -12,6 +12,11 @@ export const metadata = {
 	title: "Voucher",
 };
 
+// export async function generateMetadata({ params }) {
+// 	const { name } = await getVouchers(params.cabinId);
+// 	return { title: `Cabin ${name}` };
+// }
+
 const VoucherPage = async ({
 	searchParams,
 }: {
@@ -63,11 +68,19 @@ const VoucherPage = async ({
 							</p>
 						</div>
 
-						<Link
-							href='/voucher/create-voucher'
-							className='rounded-xl  bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90'>
-							Create
-						</Link>
+						<div className='flex gap-3'>
+							<Link
+								href='/voucher/redeem'
+								className='rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-text-primary transition hover:bg-gray-50'>
+								Redeem
+							</Link>
+
+							<Link
+								href='/voucher/create-voucher'
+								className='rounded-xl  bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90'>
+								Create
+							</Link>
+						</div>
 					</header>
 
 					<section>

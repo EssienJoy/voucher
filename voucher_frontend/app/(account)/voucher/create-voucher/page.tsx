@@ -3,11 +3,6 @@ import { createVoucher } from "@/app/_lib/api/action";
 import VoucherForm from "@/app/_components/VoucherForm";
 import ArrowBack from "@/app/_components/ArrowBack";
 
-// export async function generateMetadata({ params }) {
-// 	const { name } = await getCabin(params.cabinId);
-// 	return { title: `Cabin ${name}` };
-// }
-
 export const metadata = {
 	title: "Create ",
 };
@@ -25,7 +20,7 @@ const CreateVoucherPage = () => {
 								<header className='flex mb-7 items-center gap-5'>
 									<ArrowBack />
 									<h1 className='text-2xl font-bold text-text-primary '>
-										Edit voucher
+										Create a voucher
 									</h1>
 								</header>
 
