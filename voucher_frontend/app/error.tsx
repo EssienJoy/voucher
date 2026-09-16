@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Container, Footer, Header } from "./_components";
+import { Container, Footer } from "./_components";
 interface ErrorProps {
 	error: Error & { digest?: string };
 	reset: () => void;
@@ -14,7 +14,6 @@ export default function Error({ error, reset }: ErrorProps) {
 	const router = useRouter();
 	return (
 		<>
-			<Header />
 			<main className='grid place-items-center min-h-dvh  gap-6 px-6 text-center'>
 				<Container>
 					<h1 className='text-3xl text-centerfont-semibold mb-5'>

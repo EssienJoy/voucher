@@ -3,83 +3,106 @@ import Link from "next/link";
 
 const Footer = () => {
 	return (
-		<footer className='bg-[#13013D] py-12 text-white'>
-			<Container>
-				<div className='grid gap-10 md:grid-cols-3'>
-					<div className='md:col-span-2'>
-						<h2 className='text-2xl font-bold'>Voucherly</h2>
+		<footer className='relative mt-16 overflow-hidden border-t border-white/60 bg-white/40 backdrop-blur-xl'>
+			{/* Subtle drifting orbs to echo the hero */}
+			<div
+				aria-hidden
+				className='orb pointer-events-none absolute -left-40 -top-40 h-96 w-96 rounded-full bg-secondary/40 blur-3xl'
+			/>
+			<div
+				aria-hidden
+				className='orb pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-accent/30 blur-3xl'
+				style={{ animationDelay: "-8s" }}
+			/>
+			<div
+				aria-hidden
+				className='glass-noise pointer-events-none absolute inset-0'
+			/>
 
-						<p className='mt-4 max-w-md text-sm leading-6 text-[#AEA9EF]'>
-							A simple voucher management platform that helps businesses create,
-							manage, validate, and track their vouchers with ease.
-						</p>
-					</div>
+			<div className='relative'>
+				<Container>
+					<div className='grid gap-10 py-12 md:grid-cols-3'>
+						<div className='md:col-span-2'>
+							<h2 className='text-2xl font-bold text-text-primary'>Voucherly</h2>
 
-					<div className='grid grid-cols-2 gap-8'>
-						<div>
-							<h3 className='text-sm font-semibold'>Product</h3>
-
-							<ul className='mt-4 space-y-3 text-sm text-[#AEA9EF]'>
-								<li>
-									<a href='#features' className='transition hover:text-white'>
-										Features
-									</a>
-								</li>
-
-								<li>
-									<a
-										href='#how-it-works'
-										className='transition hover:text-white'>
-										How it works
-									</a>
-								</li>
-
-								<li>
-									<Link href='/login' className='transition hover:text-white'>
-										Log in
-									</Link>
-								</li>
-
-								<li>
-									<Link href='/signup' className='transition hover:text-white'>
-										Get started
-									</Link>
-								</li>
-							</ul>
+							<p className='mt-4 max-w-md text-sm leading-6 text-text-secondary'>
+								A simple voucher management platform that helps businesses create,
+								manage, validate, and track their vouchers with ease.
+							</p>
 						</div>
 
-						<div>
-							<h3 className='text-sm font-semibold'>Company</h3>
+						<div className='grid grid-cols-2 gap-8'>
+							<div>
+								<h3 className='text-sm font-semibold text-text-primary'>
+									Product
+								</h3>
 
-							<ul className='mt-4 space-y-3 text-sm text-[#AEA9EF]'>
-								<li>
-									<Link href='/about' className='transition hover:text-white'>
-										About
-									</Link>
-								</li>
+								<ul className='mt-4 space-y-3 text-sm text-text-secondary'>
+									<li>
+										<Link
+											href='/#features'
+											className='transition hover:text-primary'>
+											Features
+										</Link>
+									</li>
 
-								<li>
-									<a href='/contact' className='transition hover:text-white'>
-										Contact
-									</a>
-								</li>
+									<li>
+										<Link
+											href='/#how-it-works'
+											className='transition hover:text-primary'>
+											How it works
+										</Link>
+									</li>
 
-								<li>
-									<a
-										href='/privacy-terms'
-										className='transition hover:text-white'>
-										Terms & Privacy
-									</a>
-								</li>
-							</ul>
+									<li>
+										<Link href='/login' className='transition hover:text-primary'>
+											Log in
+										</Link>
+									</li>
+
+									<li>
+										<Link href='/signup' className='transition hover:text-primary'>
+											Get started
+										</Link>
+									</li>
+								</ul>
+							</div>
+
+							<div>
+								<h3 className='text-sm font-semibold text-text-primary'>
+									Company
+								</h3>
+
+								<ul className='mt-4 space-y-3 text-sm text-text-secondary'>
+									<li>
+										<Link href='/about' className='transition hover:text-primary'>
+											About
+										</Link>
+									</li>
+
+									<li>
+										<Link href='/contact' className='transition hover:text-primary'>
+											Contact
+										</Link>
+									</li>
+
+									<li>
+										<Link
+											href='/privacy-terms'
+											className='transition hover:text-primary'>
+											Terms & Privacy
+										</Link>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div className='mt-10 border-t border-white/10 pt-6 text-center text-sm text-[#AEA9EF]'>
-					<p>© {new Date().getFullYear()} Voucherly. All rights reserved.</p>
-				</div>
-			</Container>
+					<div className='border-t border-black/5 py-6 text-center text-sm text-text-secondary'>
+						<p>© {new Date().getFullYear()} Voucherly. All rights reserved.</p>
+					</div>
+				</Container>
+			</div>
 		</footer>
 	);
 };

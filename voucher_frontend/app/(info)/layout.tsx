@@ -1,5 +1,6 @@
 import React from "react";
-import { Footer, Header } from "../_components";
+import { Footer } from "../_components";
+import Header from "../_components/Header";
 
 const InfoLayout = ({ children }: LayoutProps<"/">) => {
 	return (

@@ -1,4 +1,5 @@
-import { Container, Footer, Header, VerifyVoucher } from "@/app/_components";
+import { Container, Footer, VerifyVoucher } from "@/app/_components";
+import Header from "@/app/_components/Header";
 import { TicketCheck } from "lucide-react";
 
 const RedeemVoucherPage = async () => {
