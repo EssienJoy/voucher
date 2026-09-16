@@ -5,10 +5,16 @@ import {
 	Link,
 	MobileHeader,
 } from "@/app/_components";
-import { ArrowRight } from "lucide-react";
+import {
+	ArrowRight,
+	CalendarDays,
+	CircleCheck,
+	CircleX,
+	Plus,
+	Ticket,
+} from "lucide-react";
 import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
 import { Suspense } from "react";
-// import { capitalize } from "@/app/_lib/utils";
 
 export const metadata = {
 	title: "Dashboard",
@@ -22,64 +28,118 @@ const DashboardPage = async () => {
 
 	const { vouchers }: { vouchers: voucher[] | null } = vouchersResult;
 
+	const total = vouchers?.length ?? 0;
 	const active = vouchers?.filter((v) => v.status === "active").length ?? 0;
-
 	const expired = vouchers?.filter((v) => v.status === "expired").length ?? 0;
 
 	const { business } = businessResult;
-	// console.log(business);
 
-	const dashboard = [
+	const progress = total > 0 ? Math.round((active / total) * 100) : 0;
+
+	const stats = [
 		{
 			title: "Vouchers",
-			num: vouchers?.length,
+			num: total,
+			icon: Ticket,
+			chip: "bg-secondary/60 text-primary",
 		},
 		{
 			title: "Active",
 			num: active,
+			icon: CircleCheck,
+			chip: "bg-green-100 text-green-700",
 		},
 		{
-			title: "Epired",
+			title: "Expired",
 			num: expired,
+			icon: CircleX,
+			chip: "bg-red-100 text-red-700",
 		},
 	];
+
+	const badge = (status: voucher["status"]) =>
+		status === "active"
+			? "bg-green-100 text-green-700"
+			: status === "redeemed"
+				? "bg-blue-100 text-blue-700"
+				: "bg-red-100 text-red-700";
+
 	return (
 		<>
 			<MobileHeader text='Dashboard' />
 
-			<section className='py-25 sm:py-15 '>
+			<section className='py-25 sm:py-15'>
 				<Container>
-					<div className='mb-8'>
-						<h1 className='mt-1 capitalize text-3xl font-bold text-text-primary'>
-							Welcome, {business?.business_name ? business.business_name : " "}{" "}
-							👋
-						</h1>
+					<header className='mb-8 flex flex-wrap items-end justify-between gap-4'>
+						<div>
+							<h1 className='text-3xl font-bold capitalize text-text-primary'>
+								Welcome back, {business?.business_name ?? "there"} 👋
+							</h1>
 
-						<p className='mt-2 text-sm text-text-secondary'>
-							Here&apos;s an overview of your vouchers.
-						</p>
-					</div>
+							<p className='mt-2 text-sm text-text-secondary'>
+								Here&apos;s an overview of your vouchers.
+							</p>
+						</div>
+
+						<Link
+							href='/voucher/create-voucher'
+							primary
+							className='flex items-center gap-2'>
+							<Plus size={16} />
+							Create Voucher
+						</Link>
+					</header>
 
 					<Suspense fallback={<DashboardStatsSkeleton />}>
-						<section
-							className={`
-							grid grid-cols-2 sm:grid-cols-3 gap-3`}>
-							{dashboard.map((data, i) => (
-								<div
-									key={data.title}
-									className={`
-								${i + 1 === 3 ? "col-span-2 sm:col-span-1" : ""}
-								rounded-2xl bg-white p-4`}>
-									<p className='text-sm font-medium text-text-secondary'>
-										{data.title}
-									</p>
+						<section className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+							{stats.map((stat, i) => {
+								const Icon = stat.icon;
 
-									<p className='mt-2 text-3xl font-bold text-text-primary'>
-										{data.num ? data.num : "0"}
-									</p>
-								</div>
-							))}
+								return (
+									<div
+										key={stat.title}
+										className={`${
+											i + 1 === 3 ? "col-span-2 sm:col-span-1" : ""
+										} rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:shadow-md`}>
+										<div className='flex items-center justify-between gap-4'>
+											<p className='text-sm font-medium text-text-secondary'>
+												{stat.title}
+											</p>
+
+											<span
+												className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${stat.chip}`}>
+												<Icon size={20} />
+											</span>
+										</div>
+
+										<p className='mt-3 text-3xl font-bold text-text-primary'>
+											{stat.num}
+										</p>
+									</div>
+								);
+							})}
 						</section>
+
+						{total > 0 && (
+							<div className='mt-4 rounded-2xl border border-black/5 bg-white p-5 shadow-sm'>
+								<div className='flex items-center justify-between text-sm'>
+									<span className='font-semibold text-text-primary'>
+										{active} of {total} vouchers active
+									</span>
+
+									<span className='font-medium text-text-secondary'>
+										{progress}%
+									</span>
+								</div>
+
+								<div className='mt-3 h-2 overflow-hidden rounded-full bg-gray-100'>
+									<div
+										className='h-full rounded-full bg-primary transition-all'
+										style={{ width: `${progress}%` }}
+									/>
+								</div>
+							</div>
+						)}
 					</Suspense>
 
 					<section className='mt-10'>
@@ -94,7 +154,7 @@ const DashboardPage = async () => {
 								</p>
 							</div>
 
-							<Link href='/voucher' accent className='flex gap-3 items-center'>
+							<Link href='/voucher' accent className='flex items-center gap-3'>
 								View all
 								<ArrowRight size={16} />
 							</Link>
@@ -102,65 +162,80 @@ const DashboardPage = async () => {
 
 						<Suspense fallback={<DashboardVoucherSkeleton />}>
 							{!vouchers ? (
-								<div className='rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 '>
-									<p className='font-semibold text-2xl text-text-primary text-center'>
+								<div className='rounded-2xl border border-dashed border-text-secondary/30 bg-white/60 px-6 py-14 text-center backdrop-blur-sm'>
+									<div className='mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-secondary/60 text-primary'>
+										<Ticket size={28} />
+									</div>
+
+									<p className='mt-4 text-xl font-bold text-text-primary'>
 										No vouchers yet
 									</p>
 
-									<p className='mt-3 text-sm text-text-secondary'>
+									<p className='mx-auto mt-2 max-w-sm text-sm text-text-secondary'>
 										Create your first voucher to start managing your promotions.
 									</p>
+
+									<Link
+										href='/voucher/create-voucher'
+										primary
+										className='mt-6 inline-flex items-center gap-2'>
+										<Plus size={16} />
+										Create your first voucher
+									</Link>
 								</div>
 							) : (
 								<div className='space-y-3'>
-									{vouchers?.slice(0, 3)?.map((voucher) => (
-										<div key={voucher.id} className='rounded-2xl bg-white p-4'>
-											<div className='flex items-center justify-between gap-4'>
-												<div>
-													<p className='text-lg font-bold uppercase text-text-primary'>
-														{voucher.code}
+									{vouchers?.slice(0, 2)?.map((voucher) => (
+										<div
+											key={voucher.id}
+											className='rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:shadow-md'>
+											<div className='flex items-start justify-between gap-4'>
+												<div className='min-w-0'>
+													<p className='truncate text-base font-bold capitalize text-text-primary'>
+														{voucher.title}
 													</p>
 
-													<div className='mt-1 flex gap-3 text-xs text-text-secondary'>
+<p className='mt-0.5 text-sm font-medium uppercase tracking-wider text-primary'>
+										{voucher.code}
+									</p>
+
+													<div className='mt-2 flex gap-3 text-xs text-text-secondary'>
 														<span>
 															{voucher.discount_value}
 															{voucher.discount_type === "percentage"
 																? "%"
-																: "₦"}
-															{""} off
+																: "₦"}{" "}
+															off
 														</span>
 														<span>•</span>
 														<span>{voucher.usage_limit} uses</span>
 													</div>
 												</div>
 
-												<div className='text-right'>
-													<span
-														className={`rounded-full bg-green-50 px-3 py-1 
-											text-xs font-semibold capitalize text-green-600 ${
-												voucher.status === "expired"
-													? "text-red-700 bg-red-50"
-													: "text-green-600 bg-green-50"
-											}`}>
-														{voucher.status}
-													</span>
+												<span
+													className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold capitalize ${badge(
+														voucher.status,
+													)}`}>
+													{voucher.status}
+												</span>
+											</div>
 
-													<p className='mt-2 capitalize text-xs text-text-secondary'>
-														{voucher.status}
-													</p>
-												</div>
+											<div className='mt-4 flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-text-secondary'>
+												<span className='flex items-center gap-1.5'>
+													<CalendarDays size={14} />
+													Created{" "}
+													{new Date(voucher.createdAt).toLocaleDateString()}
+												</span>
+
+												<span className='font-semibold text-text-primary'>
+													{voucher.redemption_count}/{voucher.usage_limit} redeemed
+												</span>
 											</div>
 										</div>
 									))}
 								</div>
 							)}
 						</Suspense>
-
-						<div className='my-10 flex justify-end'>
-							<Link href='/voucher/create-voucher' primary>
-								Create Voucher
-							</Link>
-						</div>
 					</section>
 				</Container>
 			</section>

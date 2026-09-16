@@ -7,11 +7,12 @@ const Header = ({ text }: { text: string }) => {
 				sm:hidden
 				fixed top-0 left-0 z-50 w-full
 				rounded-b-2xl
-				bg-primary
+				border-b border-black/5
+				bg-white/70
 				py-4
-				backdrop-blur-md
-				text-white
-				
+				backdrop-blur-xl
+				text-text-primary
+				shadow-sm
 			'>
 			<Container>
 				<h1 className='text-xl text-center font-bold '>{text}</h1>
