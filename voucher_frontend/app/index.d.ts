@@ -28,25 +28,23 @@ declare interface voucher extends baseVoucher {
 	business_id: string;
 	createdAt: string;
 	redemption_count: number;
-	status: "active" | "redeemed" | "expired";
+	status: "active" | "redeemed" | "exhausted" | "expired";
 }
 
 declare type VoucherInsert = baseVoucher & {
 	business_id: string;
 	created_at: string;
-	status?: "active" | "exhausted" | "expired";
+	status?: "active" | "redeemed" | "exhausted" | "expired";
 };
 
 declare type VoucherUpdate = Partial<baseVoucher>;
 
-// Public verify/redeem-by-code (see REDEMPTION_STRATEGY.md, scenario 3) —
-// backed by GET/POST /api/v1/redeem/verify|redeem/:code.
 declare type VoucherResult = initialState & {
 	data: voucher | null;
 };
 
 declare type RedeemResult = initialState & {
-	data: voucher | null;
+	voucher: voucher | null;
 };
 
 declare type ApiKeyResult = initialState & {

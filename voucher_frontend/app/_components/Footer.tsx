@@ -4,7 +4,6 @@ import Link from "next/link";
 const Footer = () => {
 	return (
 		<footer className='relative mt-16 overflow-hidden border-t border-white/60 bg-white/40 backdrop-blur-xl'>
-			{/* Subtle drifting orbs to echo the hero */}
 			<div
 				aria-hidden
 				className='orb pointer-events-none absolute -left-40 -top-40 h-96 w-96 rounded-full bg-secondary/40 blur-3xl'
@@ -38,33 +37,21 @@ const Footer = () => {
 								</h3>
 
 								<ul className='mt-4 space-y-3 text-sm text-text-secondary'>
-									<li>
-										<Link
-											href='/#features'
-											className='transition hover:text-primary'>
-											Features
-										</Link>
-									</li>
-
-									<li>
-										<Link
-											href='/#how-it-works'
-											className='transition hover:text-primary'>
-											How it works
-										</Link>
-									</li>
-
-									<li>
-										<Link href='/login' className='transition hover:text-primary'>
-											Log in
-										</Link>
-									</li>
-
-									<li>
-										<Link href='/signup' className='transition hover:text-primary'>
-											Get started
-										</Link>
-									</li>
+									{[
+										{ label: "Features", href: "/#features" },
+										{ label: "How it works", href: "/#how-it-works" },
+										{ label: "Log in", href: "/login" },
+										{ label: "Get started", href: "/signup" },
+										{ label: "Redeem", href: "/redeem-voucher" },
+									].map((item) => (
+										<li key={item.href}>
+											<Link
+												href={item.href}
+												className='transition hover:text-primary'>
+												{item.label}
+											</Link>
+										</li>
+									))}
 								</ul>
 							</div>
 
@@ -74,25 +61,19 @@ const Footer = () => {
 								</h3>
 
 								<ul className='mt-4 space-y-3 text-sm text-text-secondary'>
-									<li>
-										<Link href='/about' className='transition hover:text-primary'>
-											About
-										</Link>
-									</li>
-
-									<li>
-										<Link href='/contact' className='transition hover:text-primary'>
-											Contact
-										</Link>
-									</li>
-
-									<li>
-										<Link
-											href='/privacy-terms'
-											className='transition hover:text-primary'>
-											Terms & Privacy
-										</Link>
-									</li>
+									{[
+										{ label: "About", href: "/about" },
+										{ label: "Contact", href: "/contact" },
+										{ label: "Terms & Privacy", href: "/privacy-terms" },
+									].map((item) => (
+										<li key={item.href}>
+											<Link
+												href={item.href}
+												className='transition hover:text-primary'>
+												{item.label}
+											</Link>
+										</li>
+									))}
 								</ul>
 							</div>
 						</div>

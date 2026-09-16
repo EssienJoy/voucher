@@ -42,6 +42,8 @@ export async function redeemVoucherByCode(
   options: {
     businessId?: mongoose.Types.ObjectId | undefined;
     redeemedBy?: string | null | undefined;
+    redemptionEmail?: string | null | undefined;
+    redemptionPhoneNumber?: string | null | undefined;
   } = {},
 ): Promise<VoucherDocument> {
   const voucher = await verifyVoucherByCode(code, options.businessId);
@@ -54,6 +56,8 @@ export async function redeemVoucherByCode(
     voucher_id: voucher._id,
     business_id: voucher.business_id,
     redeemed_by: options.redeemedBy ?? null,
+    redemption_email: options.redemptionEmail ?? null,
+    redemption_phoneNumber: options.redemptionPhoneNumber ?? null,
   });
 
   return voucher;

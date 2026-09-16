@@ -20,10 +20,10 @@ const SigninWithGoogle = () => {
 			type='button'
 			className='
 							flex w-full items-center justify-center
-							gap-3 rounded-xl border border-gray-200
+							gap-3 rounded-xl border border-black/5
 							bg-white px-5 py-3.5
 							font-semibold text-text-primary
-							transition hover:bg-gray-50
+							shadow-sm transition hover:bg-gray-50
 							disabled:opacity-60
 						'>
 			<Image
@@ -31,8 +31,9 @@ const SigninWithGoogle = () => {
 				alt='Google logo'
 				height='24'
 				width='24'
+				className='h-6 w-6'
 			/>
-			{isPending ? "Redirecting..." : "Continue with Google"}
+			{isPending ? "Redirecting to Google..." : "Continue with Google"}
 		</button>
 	);
 };

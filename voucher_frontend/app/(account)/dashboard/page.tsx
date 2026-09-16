@@ -9,6 +9,7 @@ import {
 	ArrowRight,
 	CalendarDays,
 	CircleCheck,
+	CircleOff,
 	CircleX,
 	Plus,
 	Ticket,
@@ -31,6 +32,8 @@ const DashboardPage = async () => {
 	const total = vouchers?.length ?? 0;
 	const active = vouchers?.filter((v) => v.status === "active").length ?? 0;
 	const expired = vouchers?.filter((v) => v.status === "expired").length ?? 0;
+	const exhausted =
+		vouchers?.filter((v) => v.status === "exhausted").length ?? 0;
 
 	const { business } = businessResult;
 
@@ -55,6 +58,12 @@ const DashboardPage = async () => {
 			icon: CircleX,
 			chip: "bg-red-100 text-red-700",
 		},
+		{
+			title: "Exhausted",
+			num: exhausted,
+			icon: CircleOff,
+			chip: "bg-amber-100 text-amber-700",
+		},
 	];
 
 	const badge = (status: voucher["status"]) =>
@@ -73,7 +82,7 @@ const DashboardPage = async () => {
 					<header className='mb-8 flex flex-wrap items-end justify-between gap-4'>
 						<div>
 							<h1 className='text-3xl font-bold capitalize text-text-primary'>
-								Welcome back, {business?.business_name ?? "there"} 👋
+								Welcome back, {business?.business_name ?? "Dear"} 👋
 							</h1>
 
 							<p className='mt-2 text-sm text-text-secondary'>
@@ -91,16 +100,14 @@ const DashboardPage = async () => {
 					</header>
 
 					<Suspense fallback={<DashboardStatsSkeleton />}>
-						<section className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
-							{stats.map((stat, i) => {
+						<section className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
+							{stats.map((stat) => {
 								const Icon = stat.icon;
 
 								return (
 									<div
 										key={stat.title}
-										className={`${
-											i + 1 === 3 ? "col-span-2 sm:col-span-1" : ""
-										} rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:shadow-md`}>
+										className={` rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:shadow-md`}>
 										<div className='flex items-center justify-between gap-4'>
 											<p className='text-sm font-medium text-text-secondary'>
 												{stat.title}
@@ -161,7 +168,7 @@ const DashboardPage = async () => {
 						</div>
 
 						<Suspense fallback={<DashboardVoucherSkeleton />}>
-							{!vouchers ? (
+							{!vouchers || vouchers.length === 0 ? (
 								<div className='rounded-2xl border border-dashed border-text-secondary/30 bg-white/60 px-6 py-14 text-center backdrop-blur-sm'>
 									<div className='mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-secondary/60 text-primary'>
 										<Ticket size={28} />
@@ -195,9 +202,9 @@ const DashboardPage = async () => {
 														{voucher.title}
 													</p>
 
-<p className='mt-0.5 text-sm font-medium uppercase tracking-wider text-primary'>
-										{voucher.code}
-									</p>
+													<p className='mt-0.5 text-sm font-medium uppercase tracking-wider text-primary'>
+														{voucher.code}
+													</p>
 
 													<div className='mt-2 flex gap-3 text-xs text-text-secondary'>
 														<span>
@@ -228,7 +235,8 @@ const DashboardPage = async () => {
 												</span>
 
 												<span className='font-semibold text-text-primary'>
-													{voucher.redemption_count}/{voucher.usage_limit} redeemed
+													{voucher.redemption_count}/{voucher.usage_limit}{" "}
+													redeemed
 												</span>
 											</div>
 										</div>

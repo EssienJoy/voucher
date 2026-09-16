@@ -2,12 +2,9 @@
 import { useActionState } from "react";
 import { signUp } from "../_lib/api/auth";
 import Input from "./Input";
+import { CircleCheck, CircleX, UserPlus } from "lucide-react";
 
 const SignUpForm = () => {
-	// signUp is a real Server Action with the exact shape useActionState
-	// expects, and it redirects to /dashboard itself on success — see
-	// auth.ts for the full explanation of how the cookie reaches the
-	// browser even though this code runs on the Next.js server.
 	const [state, formAction, isPending] = useActionState(signUp, {
 		error: null,
 		success: null,
@@ -40,15 +37,26 @@ const SignUpForm = () => {
 				type='submit'
 				disabled={isPending}
 				className='
-								w-full rounded-xl bg-primary
-								px-5 py-3.5
-								font-semibold text-white
-								transition hover:opacity-90
-							'>
+					flex w-full items-center justify-center gap-2 rounded-xl bg-primary
+					px-5 py-3.5 font-semibold text-white
+					shadow-sm transition hover:opacity-90
+					disabled:cursor-not-allowed disabled:opacity-60
+				'>
+				<UserPlus size={18} />
 				{isPending ? "Creating..." : "Create Account"}
 			</button>
-			<p className='text-red-500 text-xs'>{state.error}</p>
-			<p className=' text-green-500 text-xs'>{state.success}</p>
+			{state.error && (
+				<p className='flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700'>
+					<CircleX size={16} />
+					{state.error}
+				</p>
+			)}
+			{state.success && (
+				<p className='flex items-center gap-2 rounded-xl border border-green-100 bg-green-50 px-4 py-3 text-sm font-medium text-green-700'>
+					<CircleCheck size={16} />
+					{state.success}
+				</p>
+			)}
 		</form>
 	);
 };

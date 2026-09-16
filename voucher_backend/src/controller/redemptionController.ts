@@ -50,6 +50,18 @@ export const redeemVoucher = async (
     const redeemedBy =
       bodyRedeemedBy ?? req.user?.business_name ?? req.user?.email ?? null;
 
+    const bodyEmail =
+      typeof req.body?.redemption_email === 'string' &&
+      req.body.redemption_email.trim()
+        ? req.body.redemption_email.trim()
+        : null;
+
+    const bodyPhoneNumber =
+      typeof req.body?.redemption_phoneNumber === 'string' &&
+      req.body.redemption_phoneNumber.trim()
+        ? req.body.redemption_phoneNumber.trim()
+        : null;
+
     const code = req.params.code;
     if (typeof code !== 'string' || !code.trim()) {
       return next(new AppError('Voucher code is required', 400));
@@ -58,6 +70,8 @@ export const redeemVoucher = async (
     const voucher = await redeemVoucherByCode(code, {
       businessId,
       redeemedBy,
+      redemptionEmail: bodyEmail,
+      redemptionPhoneNumber: bodyPhoneNumber,
     });
 
     res.status(200).json({

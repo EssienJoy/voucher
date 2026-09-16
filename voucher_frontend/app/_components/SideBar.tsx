@@ -17,6 +17,7 @@ const navigationLinks = [
 	{ href: "/voucher", text: "Vouchers", icon: Ticket },
 	{ href: "/profile", text: "Profile", icon: User },
 	{ href: "/settings", text: "Settings", icon: Settings },
+	{ href: "/redeem-voucher", text: "Redeem voucher", icon: TicketCheck },
 ];
 
 const SideBar = () => {
