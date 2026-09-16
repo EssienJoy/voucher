@@ -26,7 +26,7 @@ Browser → Next.js (voucher_frontend) → Express API (voucher_backend) → Mon
 - **Every server-side call to Express** goes through [`apiFetch`](voucher_frontend/app/_lib/api/http.ts), which reads that same `jwt` cookie and forwards it as `Authorization: Bearer <token>` — this is what Express's `protect` middleware checks on every business/voucher route.
 - **Route protection on the Next.js side** is enforced in [proxy.ts](voucher_frontend/proxy.ts) / [app/\_lib/auth.ts](voucher_frontend/app/_lib/auth.ts) (Next 16's replacement for `middleware.ts`): any path not in the public list redirects to `/login` if there's no `jwt` cookie.
 
-> **Migration in progress:** this app originally ran on Supabase directly from Next.js. Auth and the authenticated voucher CRUD flow (create/edit/list/delete, business profile) have been migrated to the Express/MongoDB backend. The **public verify & redeem flow** (`/redeem-voucher`) hasn't been ported yet — its UI (`VerifyVoucher`) is currently commented out in [app/redeem-voucher/page.tsx](voucher_frontend/app/redeem-voucher/page.tsx) pending an equivalent public "look up voucher by code" endpoint on the Express side. The frontend's `@supabase/*` packages are still installed but no longer used by any app code — see [Roadmap](#roadmap).
+> **Migration in progress:** this app originally ran on Supabase directly from Next.js. Auth and the authenticated voucher CRUD flow (create/edit/list/delete, business profile) have been migrated to the Express/MongoDB backend. The **public verify & redeem flow** (`/redeem-voucher`) is now fully ported too: `verifyVoucher` / `redeemVoucher` on the Express side power the public page, the business verify/redeem pages, and the external-systems API (see [Redemption API for external systems](#redemption-api-for-external-systems)). The frontend's `@supabase/*` packages are still installed but no longer used by any app code.
 
 ## What it does
 
@@ -49,7 +49,7 @@ Browser → Next.js (voucher_frontend) → Express API (voucher_backend) → Mon
 | `/voucher/create-voucher`              | Account | Create a voucher                                                    |
 | `/voucher/edit-voucher/[voucherId]`    | Account | Edit a voucher                                                      |
 | `/profile`                             | Account | Business profile                                                    |
-| `/redeem-voucher`                      | Public  | Verify & redeem a voucher code — _UI currently disabled, see above_ |
+| `/redeem-voucher`                      | Public  | Verify & redeem a voucher code (fully working)                            |
 | `/about`, `/contact`, `/privacy-terms` | Public  | Info pages                                                          |
 | `/admin/dashboard`                     | —       | Platform-wide overview (UI scaffold, mock data for now)             |
 
@@ -70,7 +70,7 @@ Base path: `/api/v1`. All routes below `businessRouter.use(protect)` / `voucherR
 | PATCH  | `/voucher/:id`  | Protected              | Update a voucher (must belong to the current business) |
 | DELETE | `/voucher/:id`  | Protected              | Delete a voucher (must belong to the current business) |
 
-There's no public "look up voucher by code" route yet — that's the missing piece behind `/redeem-voucher` (see [Roadmap](#roadmap)).
+The public verify & redeem routes are documented under [Redemption API for external systems](#redemption-api-for-external-systems).
 
 ## Tech stack
 
@@ -157,10 +157,9 @@ Both apps expose the same script names:
 
 ## Roadmap
 
-- Add a public "look up voucher by code" endpoint on the backend and re-enable `VerifyVoucher` on `/redeem-voucher`
 - Remove the unused `@supabase/ssr` / `@supabase/supabase-js` packages from the frontend now that auth and voucher CRUD are fully on the Express/MongoDB backend
 - Wire up `/admin/dashboard` to real platform data (currently static/mock numbers)
-- Finish "Continue with Google" sign-in (the button exists in the UI, and `Business` already has `provider_type`/`providers` fields, but it isn't wired up yet)
+- Finish "Continue with Google" sign-in (the login/signup UI has the button)
 - Voucher analytics / redemption history per voucher
 - Checked-in schema/migrations for MongoDB instead of implicit Mongoose schemas
 - Email or SMS notification when a voucher is redeemed
@@ -184,4 +183,69 @@ No license has been chosen for this project yet. All rights reserved until one i
 
 Actively developed, mid-migration from Supabase to a custom Express/MongoDB backend. Auth and the authenticated voucher CRUD flow work end-to-end; the public verify/redeem flow, the admin panel, and Google sign-in are in-progress (see [Roadmap](#roadmap)).
 
-## Implimentation for redemption api for external systems
+## Redemption API for external systems
+
+Businesses can integrate their point-of-sale (or any external system) with the
+voucher backend using **API keys**. The key is hashed with sha256 before
+storage; only the hash ever lives in the database, the raw key is shown once by
+the app (`ApiKeySection` in the settings page). Regenerate at any time via
+`POST /api/v1/user/me/api-key` (protected).
+
+### How it works
+
+1. Logged-in businesses get an API key from the **Settings** page.
+2. Install the key in their external system as a Bearer token.
+3. Call the public endpoints below from that system. No JWT needed.
+
+### Endpoints
+
+Base path: `/api/v1/public`. All requests require `Authorization: Bearer <api-key>`.
+
+| Method | Path                     | Purpose                                    |
+| ------ | ------------------------ | ------------------------------------------ |
+| GET    | `/vouchers/verify/:code` | Look up a voucher by code (validity + details) |
+| POST   | `/vouchers/redeem/:code` | Redeem a voucher by code, record the redemption |
+
+**Request body** (`POST /vouchers/redeem/:code`):
+
+```json
+{
+  "redeemed_by": "Customer name",
+  "redemption_email": "customer@example.com",
+  "redemption_phoneNumber": "+2348000000000"
+}
+```
+
+All fields are optional; `redeemed_by` falls back to the business name. The
+`Redemption` record stores the voucher id, business id, and whatever customer
+details were supplied.
+
+### Example
+
+```bash
+# Verify a code
+curl -X GET https://<backend>/api/v1/public/vouchers/verify/SAVE10 \
+  -H "Authorization: Bearer <api-key>"
+
+# Redeem a code
+curl -X POST https://<backend>/api/v1/public/vouchers/redeem/SAVE10 \
+  -H "Authorization: Bearer <api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"redeemed_by": "Ada", "redemption_email": "ada@example.com"}'
+```
+
+### Web (app) redeem
+
+The app's own flows hit the same redemption logic without an API key (code
+`verifyVoucherByCode` / `redeemVoucherByCode` in
+[voucher_backend/src/utils/redemptionService.ts](voucher_backend/src/utils/redemptionService.ts)):
+
+- **Business verify/redeem** — `GET /api/v1/redeem/verify-voucher/:code` and
+  `POST /api/v1/redeem/redeem-voucher/:code`, JWT-scoped to the business.
+- **Public page** — the `/redeem-voucher` page posts through the
+  [redeemVoucherPublic] server action; when no JWT is present the lookup by
+  code is global.
+
+Redemption rules are enforced server-side: a voucher past its expiry is marked
+`expired`, and once `redemption_count` reaches `usage_limit` further redeems
+are rejected.
