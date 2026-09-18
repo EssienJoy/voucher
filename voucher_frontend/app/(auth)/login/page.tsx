@@ -1,4 +1,6 @@
-import { LoginForm, Logo, SigninWithGoogle } from "@/app/_components";
+import { Logo } from "@/components";
+import LoginForm from "@/features/auth/components/LoginForm";
+import SigninWithGoogle from "@/features/auth/components/SigninWithGoogle";
 import Image from "next/image";
 import Link from "next/link";
 import voucher from "@/public/voucher.jpg";

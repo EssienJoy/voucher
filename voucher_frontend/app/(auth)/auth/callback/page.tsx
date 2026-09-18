@@ -1,8 +1,8 @@
 "use client";
 import { Suspense, useEffect, useRef, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { handleGoogleCallback } from "@/app/_lib/api/auth";
-import { Logo } from "@/app/_components";
+import { handleGoogleCallback } from "@/features/auth/lib/auth";
+import { Logo } from "@/components";
 import { LoaderCircle } from "lucide-react";
 
 const CallbackContent = () => {
@@ -35,11 +35,7 @@ const CallbackContent = () => {
 				<Logo />
 
 				<div className='mt-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary/50 text-primary'>
-					<LoaderCircle
-						size={28}
-						className='animate-spin'
-						aria-hidden='true'
-					/>
+					<LoaderCircle size={28} className='animate-spin' aria-hidden='true' />
 				</div>
 
 				<h1 className='mt-5 text-xl font-bold text-text-primary'>

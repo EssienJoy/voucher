@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Container, Footer } from "./_components";
+import { Container, Footer } from "@/components";
 import { ArrowLeft, RotateCcw, TriangleAlert } from "lucide-react";
 interface ErrorProps {
 	error: Error & { digest?: string };

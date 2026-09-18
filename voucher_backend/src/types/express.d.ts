@@ -1,5 +1,5 @@
 import 'express';
-import type { BusinessDocument } from '../model/businessModel.js';
+import type { BusinessDocument } from '../modules/business/business.model.js';
 // import { Types } from 'mongoose';
 
 declare global {

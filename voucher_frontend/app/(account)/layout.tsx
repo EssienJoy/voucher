@@ -1,5 +1,5 @@
 import React from "react";
-import { SideBar, MobileFooter } from "../_components";
+import { SideBar, MobileFooter } from "@/components";
 
 const AccountLayout = ({ children }: { children: React.ReactNode }) => {
 	return (

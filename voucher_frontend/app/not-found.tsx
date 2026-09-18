@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Container } from "@/app/_components";
+import { ArrowBack, Container } from "@/components";
 import { ArrowLeft, Ticket } from "lucide-react";
-import ArrowBack from "./_components/ArrowBack";
 
 const NotFound = () => {
 	return (

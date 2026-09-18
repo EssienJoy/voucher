@@ -1,4 +1,4 @@
-import { Container } from "@/app/_components";
+import { Container } from "@/components";
 import React from "react";
 import {
 	Check,

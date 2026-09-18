@@ -1,6 +1,6 @@
-import { Container, MobileHeader, VerifyVoucher } from "@/app/_components";
-import ArrowBack from "@/app/_components/ArrowBack";
-import React from "react";
+import { Container, MobileHeader } from "@/components";
+import ArrowBack from "@/components/ui/ArrowBack";
+import VerifyVoucher from "@/features/voucher/components/VoucherCardSkeleton";
 
 const VerifyvoucherPage = () => {
 	return (

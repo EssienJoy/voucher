@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "@/app/_components";
+import { Container } from "@/components";
 import { FileText, Lock, ShieldCheck, ScrollText } from "lucide-react";
 
 export const metadata = {
@@ -74,57 +74,57 @@ const PrivacyPage = () => {
 			<Container>
 				<div className='space-y-10'>
 					{privacyAndTerms.map((rules) => {
-					const Icon = rules.icon;
+						const Icon = rules.icon;
 
-					return (
-						<article
-							key={rules.title}
-							className='mx-auto max-w-3xl rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur-sm sm:p-10'>
-							<header className='border-b border-black/5 pb-8'>
-								<div className='flex items-center gap-4'>
-									<span className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-secondary/50 text-primary'>
-										<Icon size={22} />
-									</span>
-
-									<div>
-										<p className='text-sm font-semibold uppercase tracking-widest text-primary'>
-											{rules.legal}
-										</p>
-
-										<h1 className='mt-1 text-3xl font-bold text-text-primary'>
-											{rules.title}
-										</h1>
-									</div>
-								</div>
-
-								<p className='mt-5 flex items-center gap-1.5 text-sm text-text-secondary'>
-									<Lock size={14} />
-									Last updated: {rules.updatedAt}
-								</p>
-							</header>
-
-							<ul className='mt-10 space-y-8'>
-								{rules.rules.map((rule, i) => (
-									<li key={rule.title} className='flex gap-5'>
-										<span className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary/50 text-sm font-bold text-primary'>
-											{i + 1}
+						return (
+							<article
+								key={rules.title}
+								className='mx-auto max-w-3xl rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur-sm sm:p-10'>
+								<header className='border-b border-black/5 pb-8'>
+									<div className='flex items-center gap-4'>
+										<span className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-secondary/50 text-primary'>
+											<Icon size={22} />
 										</span>
 
 										<div>
-											<h2 className='text-lg font-bold text-text-primary'>
-												{rule.title}
-											</h2>
-
-											<p className='mt-2 text-sm leading-7 text-text-secondary'>
-												{rule.text}
+											<p className='text-sm font-semibold uppercase tracking-widest text-primary'>
+												{rules.legal}
 											</p>
+
+											<h1 className='mt-1 text-3xl font-bold text-text-primary'>
+												{rules.title}
+											</h1>
 										</div>
-									</li>
-								))}
-							</ul>
-						</article>
-					);
-				} )}
+									</div>
+
+									<p className='mt-5 flex items-center gap-1.5 text-sm text-text-secondary'>
+										<Lock size={14} />
+										Last updated: {rules.updatedAt}
+									</p>
+								</header>
+
+								<ul className='mt-10 space-y-8'>
+									{rules.rules.map((rule, i) => (
+										<li key={rule.title} className='flex gap-5'>
+											<span className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary/50 text-sm font-bold text-primary'>
+												{i + 1}
+											</span>
+
+											<div>
+												<h2 className='text-lg font-bold text-text-primary'>
+													{rule.title}
+												</h2>
+
+												<p className='mt-2 text-sm leading-7 text-text-secondary'>
+													{rule.text}
+												</p>
+											</div>
+										</li>
+									))}
+								</ul>
+							</article>
+						);
+					})}
 				</div>
 
 				<p className='mx-auto mt-8 flex max-w-3xl items-center justify-center gap-2 text-sm text-text-secondary'>

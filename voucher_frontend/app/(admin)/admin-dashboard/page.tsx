@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "@/app/_components";
+import { Container } from "@/components";
 import { Users, Ticket, TicketCheck, Clock3, ArrowRight } from "lucide-react";
 
 const AdminDashboardPage = () => {

@@ -1,7 +1,7 @@
-import { Container, MobileHeader } from "@/app/_components";
-import { createVoucher } from "@/app/_lib/api/action";
-import VoucherForm from "@/app/_components/VoucherForm";
-import ArrowBack from "@/app/_components/ArrowBack";
+import { Container, MobileHeader } from "@/components";
+import VoucherForm from "@/features/voucher/components/VoucherForm";
+import ArrowBack from "@/components/ui/ArrowBack";
+import { createVoucher } from "@/features/voucher/lib/action";
 
 export const metadata = {
 	title: "Create ",

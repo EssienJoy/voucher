@@ -1,11 +1,4 @@
-import {
-	Container,
-	MobileHeader,
-	VoucherCardSkeleton,
-} from "@/app/_components";
 import Link from "next/link";
-import { getVouchers } from "@/app/_lib/api/data-service";
-import DeleteVoucher from "@/app/_components/DeleteVoucher";
 import { Suspense } from "react";
 import {
 	CalendarClock,
@@ -16,6 +9,10 @@ import {
 	Repeat,
 	Ticket,
 } from "lucide-react";
+import { Container, MobileHeader } from "@/components";
+import DeleteVoucher from "@/features/voucher/components/DeleteVoucher";
+import { getVouchers } from "@/features/voucher/lib/data-service";
+import VoucherCardSkeleton from "@/features/voucher/components/VoucherCardSkeleton";
 
 export const metadata = {
 	title: "Voucher",

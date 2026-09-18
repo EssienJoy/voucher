@@ -7,11 +7,10 @@ import { env } from './config/env.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import globalErrorHandler from './controller/errorController.js';
-import businessRouter from './routes/businessRoutes.js';
-import voucherRouter from './routes/voucherRoutes.js';
-import redeemRouter from './routes/redeemRoutes.js';
-import publicApiRouter from './routes/publicApiRoutes.js';
+import globalErrorHandler from './middleware/errorMiddleware.js';
+import businessRouter from './modules/business/business.routes.js';
+import voucherRouter from './modules/voucher/voucher.routes.js';
+import { redeemRouter, publicApiRouter } from './modules/redemption/redemption.routes.js';
 import AppError from './utils/appError.js';
 
 const app: Express = express();

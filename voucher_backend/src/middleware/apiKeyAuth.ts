@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express';
-import Business from '../model/businessModel.js';
+import Business from '../modules/business/business.model.js';
 import AppError from '../utils/appError.js';
 import { hashApiKey } from '../utils/apiKey.js';
 

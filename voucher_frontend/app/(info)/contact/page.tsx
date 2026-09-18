@@ -1,6 +1,5 @@
-import React from "react";
 import { Mail, MessageCircle, Send } from "lucide-react";
-import { Container } from "@/app/_components";
+import { Container } from "@/components";
 
 export const metadata = {
 	title: "Contact",

@@ -1,9 +1,9 @@
-import { Container, MobileHeader } from "@/app/_components";
-import { updateVoucher } from "@/app/_lib/api/action";
-import { getVoucher } from "@/app/_lib/api/data-service";
-import VoucherForm from "@/app/_components/VoucherForm";
+import { Container, MobileHeader } from "@/components";
+import VoucherForm from "@/features/voucher/components/VoucherForm";
 import { notFound } from "next/navigation";
-import ArrowBack from "@/app/_components/ArrowBack";
+import ArrowBack from "@/components/ui/ArrowBack";
+import { getVoucher } from "@/features/voucher/lib/data-service";
+import { updateVoucher } from "@/features/voucher/lib/action";
 
 export const metadata = {
 	title: "Edit",

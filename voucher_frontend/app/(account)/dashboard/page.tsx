@@ -4,7 +4,7 @@ import {
 	DashboardVoucherSkeleton,
 	Link,
 	MobileHeader,
-} from "@/app/_components";
+} from "@/components";
 import {
 	ArrowRight,
 	CalendarDays,
@@ -14,7 +14,8 @@ import {
 	Plus,
 	Ticket,
 } from "lucide-react";
-import { getBusiness, getVouchers } from "@/app/_lib/api/data-service";
+import { getBusiness } from "@/features/business/lib/data-service";
+import { getVouchers } from "@/features/voucher/lib/data-service";
 import { Suspense } from "react";
 
 export const metadata = {

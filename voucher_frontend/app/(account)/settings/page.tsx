@@ -1,9 +1,6 @@
-import {
-	ApiKeySection,
-	MobileHeader,
-} from "@/app/_components";
-import ArrowBack from "@/app/_components/ArrowBack";
-import { getBusiness } from "@/app/_lib/api/data-service";
+import { ArrowBack, MobileHeader } from "@/components";
+import { getBusiness } from "@/features/business/lib/data-service";
+import ApiKeySection from "@/features/setting/components/ApiKeySection";
 
 export const metadata = {
 	title: "Settings",

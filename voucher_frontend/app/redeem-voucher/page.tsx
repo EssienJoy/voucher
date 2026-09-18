@@ -1,5 +1,6 @@
-import { Container, Footer, RedeemVoucher } from "@/app/_components";
-import Header from "@/app/_components/Header";
+import { Container, Footer } from "@/components";
+import Header from "@/components/Header";
+import RedeemVoucher from "@/features/redemption/components/RedeemVoucher";
 import { TicketCheck } from "lucide-react";
 
 export const metadata = {
@@ -22,8 +23,8 @@ const RedeemVoucherPage = async () => {
 							<h1 className='mt-6 text-3xl font-bold'>Redeem Voucher</h1>
 
 							<p className='mt-2 text-sm leading-6 text-text-secondary'>
-								Enter your voucher code below to check it is valid and redeem
-								it for a discount.
+								Enter your voucher code below to check it is valid and redeem it
+								for a discount.
 							</p>
 						</div>
 
