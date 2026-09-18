@@ -3,6 +3,7 @@ declare type Business = {
 	email: string;
 	id: string | null;
 	createdAt: string;
+	apiKeyPrefix: string | null;
 };
 
 declare type initialState = {
@@ -27,41 +28,26 @@ declare interface voucher extends baseVoucher {
 	business_id: string;
 	createdAt: string;
 	redemption_count: number;
-	status: "active" | "redeemed" | "expired";
+	status: "active" | "redeemed" | "exhausted" | "expired";
 }
 
 declare type VoucherInsert = baseVoucher & {
 	business_id: string;
 	created_at: string;
-	status?: "active" | "exhausted" | "expired";
+	status?: "active" | "redeemed" | "exhausted" | "expired";
 };
 
 declare type VoucherUpdate = Partial<baseVoucher>;
 
-// Still Supabase-backed (see NOTE on getVoucherByCode/redeemVoucher in
-// app/_lib/api/action.ts) — ids stay Postgres numbers, not Mongo ObjectIds.
 declare type VoucherResult = initialState & {
-	data: {
-		code: string;
-		status: "expired" | "active";
-		expiry_date: string;
-		discount_type: string;
-		discount_value: number;
-		id: number;
-		business_id: number;
-	} | null;
-};
-
-declare type redeemVoucher = {
-	code: string;
-	status: "expired" | "active";
-	expiry_date: string;
-	discount_type: string;
-	discount_value: number;
-	id: number;
-	business_id: number;
+	data: voucher | null;
 };
 
 declare type RedeemResult = initialState & {
-	data: null;
+	voucher: voucher | null;
+};
+
+declare type ApiKeyResult = initialState & {
+	apiKey: string | null;
+	apiKeyPrefix: string | null;
 };

@@ -13,6 +13,8 @@ const redemptionSchema = new mongoose.Schema(
       required: true,
     },
     redeemed_by: { type: String, default: null },
+    redemption_email: { type: String, default: null },
+    redemption_phoneNumber: { type: String, default: null },
     redeemed_at: { type: Date, default: Date.now },
   },
   {

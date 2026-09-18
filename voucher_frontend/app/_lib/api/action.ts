@@ -30,9 +30,6 @@ export const createVoucher = async (
 			max_discount: getOptionalNumber(formData, "max_discount"),
 		};
 
-		// apiFetch (see http.ts) attaches the logged-in user's token as an
-		// Authorization header, so Express's `protect` + `req.user` know
-		// which business this voucher belongs to.
 		const result = await apiFetch("voucher", {
 			method: "POST",
 			body: JSON.stringify(voucher),
@@ -120,6 +117,80 @@ export async function updateBusiness(
 	return {
 		error: null,
 		success: "Profile updated successfully",
+	};
+}
+
+export async function getVoucherByCode(
+	_previousState: VoucherResult,
+	formData: FormData,
+): Promise<VoucherResult> {
+	const code = getRequiredString(formData, "code");
+	const result = await apiFetch(`redeem/verify-voucher/${code}`);
+
+	if (result.status === "fail" || result.status === "error") {
+		return { error: result.message, success: null, data: null };
+	}
+
+	return { error: null, success: "Voucher is available", data: result.data };
+}
+
+export async function redeemVoucherPublic(
+	_prevState: RedeemResult,
+	formData: FormData,
+): Promise<RedeemResult> {
+	const code = (formData.get("code") as string) ?? "";
+	const redeemedBy =
+		((formData.get("redeemed_by") as string) ?? "").trim() || null;
+	const redemptionEmail =
+		((formData.get("redemption_email") as string) ?? "").trim() || null;
+	const redemptionPhoneNumber =
+		((formData.get("redemption_phoneNumber") as string) ?? "").trim() || null;
+
+	if (!code) {
+		return { error: "Voucher code is required", success: null, voucher: null };
+	}
+
+	const result = await apiFetch(`redeem/redeem-voucher/${code}`, {
+		method: "POST",
+		body: JSON.stringify({
+			redeemed_by: redeemedBy,
+			redemption_email: redemptionEmail,
+			redemption_phoneNumber: redemptionPhoneNumber,
+		}),
+	});
+
+	if (result.status === "fail" || result.status === "error") {
+		return { error: result.message, success: null, voucher: null };
+	}
+
+	revalidatePath("/redeem-voucher");
+	revalidatePath("/voucher");
+	revalidatePath("/dashboard");
+	return {
+		error: null,
+		success: "Voucher redeemed successfully.",
+		voucher: result.data,
+	};
+}
+
+export async function regenerateApiKey(): Promise<ApiKeyResult> {
+	const result = await apiFetch("user/me/api-key", { method: "POST" });
+
+	if (result.status === "fail" || result.status === "error") {
+		return {
+			error: result.message,
+			success: null,
+			apiKey: null,
+			apiKeyPrefix: null,
+		};
+	}
+
+	revalidatePath("/profile");
+	return {
+		error: null,
+		success: result.message,
+		apiKey: result.data.apiKey,
+		apiKeyPrefix: result.data.apiKeyPrefix,
 	};
 }
 

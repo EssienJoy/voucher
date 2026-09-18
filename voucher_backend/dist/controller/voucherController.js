@@ -22,12 +22,9 @@ export const createVoucher = async (req, res, next) => {
 export const getVoucher = async (req, res, next) => {
     try {
         const businessId = new mongoose.Types.ObjectId(req.user?.id);
-        // GET /voucher/:id — fetch a single voucher, scoped to this business,
-        // 404 if it doesn't exist or belongs to someone else.
         if (req.params.id) {
             const voucher = await Voucher.findOne({
                 _id: req.params.id,
-                // business_id: businessId,
             });
             if (!voucher) {
                 return next(new AppError('No voucher found with that ID', 404));
@@ -38,20 +35,8 @@ export const getVoucher = async (req, res, next) => {
             });
             return;
         }
-        // business_id must only ever come from the authenticated user, never
-        // the client — ApiFeatures.filter() merges every remaining query key
-        // straight into the Mongoose filter, and Mongoose's find() overwrites
-        // conflicting keys on merge, so leaving this in would let a request
-        // like GET /voucher?business_id=<other id> read another business's
-        // vouchers.
         const queryParams = { ...req.query };
         delete queryParams.business_id;
-        // ApiFeatures layers arbitrary query-string filtering (status, code,
-        // _id, ...), sorting, field limiting, and pagination on top of the
-        // business-scoped base query below. That makes this one handler cover
-        // "list all", "filter by status", and "fetch a single voucher"
-        // (e.g. GET /voucher?_id=<id>) alike — no separate getAllVouchers or
-        // getSingleVoucher endpoint needed.
         const features = new ApiFeatures(Voucher.find({ business_id: businessId }), queryParams)
             .filter()
             .sort()
@@ -71,7 +56,7 @@ export const getVoucher = async (req, res, next) => {
 export const updateVoucher = async (req, res, next) => {
     try {
         const businessId = new mongoose.Types.ObjectId(req.user?.id);
-        const voucher = await Voucher.findOneAndUpdate({ _id: req.params.id, business_id: businessId }, req.body, { new: true, runValidators: true });
+        const voucher = await Voucher.findOneAndUpdate({ _id: req.params.id, business_id: businessId }, req.body, { returnDocument: 'after', runValidators: true });
         res.status(200).json({
             status: 'success',
             data: voucher,

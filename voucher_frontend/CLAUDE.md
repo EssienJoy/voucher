@@ -1,9 +1,11 @@
 @AGENTS.md
 
-# Security Rules
+<!-- BEGIN:nextjs-agent-rules -->
 
-- Never read, open, print, or expose `.env` files.
-- Never read, open, print, or expose `.env.local`.
-- Never read files containing API keys, tokens, passwords, private keys, or other credentials.
-- Never include secret values in responses, logs, code, or generated files.
-- If access to an environment variable is required, ask me to provide a redacted value or describe its purpose instead.
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

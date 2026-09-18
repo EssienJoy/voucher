@@ -13,12 +13,15 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps, mongoose.Document<unknown, {}, {
     business_name?: string | null;
@@ -26,12 +29,15 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps, {
     id: string;
@@ -49,12 +55,15 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps & {
     _id: mongoose.Types.ObjectId;
@@ -70,12 +79,15 @@ declare const businessSchema: mongoose.Schema<any, mongoose.Model<any, any, any,
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & {
     _id: mongoose.Types.ObjectId;
@@ -89,12 +101,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps, {}, {}, {
     id: string;
@@ -104,12 +119,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps, {
     id: string;
@@ -127,12 +145,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps & {
     _id: mongoose.Types.ObjectId;
@@ -154,12 +175,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps, mongoose.Document<unknown, {}, {
     business_name?: string | null;
@@ -167,12 +191,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps, {
     id: string;
@@ -190,12 +217,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & mongoose.DefaultTimestampProps & {
     _id: mongoose.Types.ObjectId;
@@ -211,12 +241,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & {
     _id: mongoose.Types.ObjectId;
@@ -230,12 +263,15 @@ declare const Business: mongoose.Model<{
     role: "admin" | "user";
     password?: string | null;
     google_id?: string | null;
+    provider_type?: string | null;
+    providers: string[];
     confirmPassword?: string | null;
+    verified: boolean;
+    apiKeyHash?: string | null;
+    apiKeyPrefix?: string | null;
     passwordChangedAt?: NativeDate | null;
     passwordResetToken?: string | null;
     passwordResetExpires?: NativeDate | null;
-    provider_type?: string | null;
-    providers: string[];
     last_sign_in_at?: NativeDate | null;
 } & {
     _id: mongoose.Types.ObjectId;

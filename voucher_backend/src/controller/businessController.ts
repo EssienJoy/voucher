@@ -2,6 +2,7 @@ import { type NextFunction, type Request, type Response } from 'express';
 import Business, { type BusinessDocument } from '../model/businessModel.js';
 import ApiFeatures from '../utils/apiFeatures.js';
 import AppError from '../utils/appError.js';
+import { generateApiKey } from '../utils/apiKey.js';
 
 export const getUser = async (
   req: Request,
@@ -10,7 +11,7 @@ export const getUser = async (
 ) => {
   try {
     const business = await Business.findById(req.user?.id).select(
-      'business_name email createdAt -_id',
+      'business_name email createdAt apiKeyPrefix -_id',
     );
 
     res.status(200).json({
@@ -36,12 +37,35 @@ export const updateUser = async (
     const business = await Business.findByIdAndUpdate(
       req.user?.id,
       { business_name: req.body.business_name },
-      { new: true, runValidators: true },
-    ).select('business_name email createdAt -_id');
+      { returnDocument: 'after', runValidators: true },
+    ).select('business_name email createdAt apiKeyPrefix -_id');
 
     res.status(200).json({
       status: 'success',
       data: business,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const regenerateApiKey = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { rawKey, hash, prefix } = generateApiKey();
+
+    await Business.findByIdAndUpdate(req.user?.id, {
+      apiKeyHash: hash,
+      apiKeyPrefix: prefix,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Save this key now — it will not be shown again.',
+      data: { apiKey: rawKey, apiKeyPrefix: prefix },
     });
   } catch (err) {
     next(err);

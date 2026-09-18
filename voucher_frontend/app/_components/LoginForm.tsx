@@ -2,13 +2,9 @@
 import { useActionState } from "react";
 import { login } from "../_lib/api/auth";
 import Input from "./Input";
+import { CircleCheck, CircleX, LogIn } from "lucide-react";
 
 const LoginForm = () => {
-	// login (in auth.ts) is a real Server Action: it already matches the
-	// (previousState, formData) => newState shape useActionState wants,
-	// and it already redirects to /dashboard itself on success (server-side,
-	// via redirect()). So we can hand it to useActionState directly — no
-	// wrapper function needed here.
 	const [state, formAction, isPending] = useActionState(login, {
 		error: null,
 		success: null,
@@ -34,15 +30,26 @@ const LoginForm = () => {
 				type='submit'
 				disabled={isPending}
 				className='
-								w-full rounded-xl bg-primary
-								px-5 py-3.5
-								font-semibold text-white
-								transition hover:opacity-90
-							'>
-				{isPending ? "Logging..." : "Log In"}
+					flex w-full items-center justify-center gap-2 rounded-xl bg-primary
+					px-5 py-3.5 font-semibold text-white
+					shadow-sm transition hover:opacity-90
+					disabled:cursor-not-allowed disabled:opacity-60
+				'>
+				<LogIn size={18} />
+				{isPending ? "Logging in..." : "Log In"}
 			</button>
-			<p className='text-red-500 text-xs'>{state.error}</p>
-			<p className=' text-green-500 text-xs'>{state.success}</p>
+			{state.error && (
+				<p className='flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700'>
+					<CircleX size={16} />
+					{state.error}
+				</p>
+			)}
+			{state.success && (
+				<p className='flex items-center gap-2 rounded-xl border border-green-100 bg-green-50 px-4 py-3 text-sm font-medium text-green-700'>
+					<CircleCheck size={16} />
+					{state.success}
+				</p>
+			)}
 		</form>
 	);
 };

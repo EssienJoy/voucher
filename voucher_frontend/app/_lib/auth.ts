@@ -14,6 +14,7 @@ export async function updateSession(request: NextRequest) {
 		"/contact",
 		"/privacy",
 		"/terms",
+		"/redeem-voucher",
 	];
 	const isPublicPath = publicPaths.some((path) =>
 		path === "/"

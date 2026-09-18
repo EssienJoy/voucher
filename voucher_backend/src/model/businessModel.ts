@@ -26,9 +26,12 @@ const businessSchema = new mongoose.Schema(
     },
     google_id: {
       type: String,
-      // unique: true,
+      unique: true,
+      sparse: true,
       default: null,
     },
+    provider_type: { type: String, default: null },
+    providers: { type: [String], default: [] },
     confirmPassword: {
       type: String,
       // required: [true, 'Confirm Password is required'],
@@ -43,11 +46,19 @@ const businessSchema = new mongoose.Schema(
       },
       select: false,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    // For scenario 1 in REDEMPTION_STRATEGY.md — a business's own website
+    // authenticates server-to-server with this instead of a JWT cookie.
+    // Only the hash is stored; the raw key is shown once, at generation
+    // time, and never again.
+    apiKeyHash: { type: String, select: false, default: null },
+    apiKeyPrefix: { type: String, default: null },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    provider_type: { type: String, default: null },
-    providers: { type: [String], default: [] },
     last_sign_in_at: { type: Date, default: null },
   },
   {
