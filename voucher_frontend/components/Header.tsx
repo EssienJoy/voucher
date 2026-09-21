@@ -20,7 +20,7 @@ const Header = async () => {
 			className={`sticky top-0 z-50 w-full transition-all
 				 duration-300 
 					bg-white/20 backdrop-blur-md`}>
-			<Container className='px-20 max-w-none'>
+			<Container>
 				<div className='flex items-center justify-between py-4'>
 					<NextLink
 						href='/'
@@ -28,7 +28,7 @@ const Header = async () => {
 						<Logo />
 					</NextLink>
 
-					<nav className='flex items-center gap-2'>
+					<nav className='flex items-center'>
 						{isAuthenticated ? (
 							<>
 								<NextLink href='/dashboard' className={primaryLink}>
